@@ -15,6 +15,8 @@ class InteractiveModel(tr.HasTraits):
 
     name = tr.Str("<unnamed>")
 
+    param_names = tr.List(tr.Str,[])
+
     def get_params(self):
         param_dict = self.trait_get(param=True)
         params = get_params_tuple(self.param_names, **param_dict)
@@ -35,6 +37,8 @@ class IPWInteract(tr.HasTraits):
 
     ipw_elements = tr.List(IPWElement)
 
+    figsize = tr.Tuple(8,3)
+
     def __init__(self, models, **kw):
         super(IPWInteract, self).__init__(**kw)
         if not (type(models) in [list, tuple]):
@@ -44,7 +48,8 @@ class IPWInteract(tr.HasTraits):
             IPWModelSliders(model=model, interactor=self, index=i)
             for i, model in enumerate(models)
         ]
-        self.fig = plt.figure()
+        self.fig = plt.figure(figsize=self.figsize,
+                              constrained_layout=True)
         self.axes = self.models[0].add_subplot(self.fig)
 
     def interact(self):
