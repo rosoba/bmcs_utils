@@ -22,8 +22,8 @@ class InteractiveModel(tr.HasTraits):
         params = get_params_tuple(self.param_names, **param_dict)
         return params
 
-    def subplots(self):
-        return plt.subplots(1, 1, figsize=(7, 4), tight_layout=True)
+    def subplots(self, fig):
+        return fig.subplots(1, 1)
 
 
 class IPWElement(tr.HasTraits):
