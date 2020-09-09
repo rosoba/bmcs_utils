@@ -50,7 +50,7 @@ class IPWInteract(tr.HasTraits):
         ]
         self.fig = plt.figure(figsize=self.figsize,
                               constrained_layout=True)
-        self.axes = self.models[0].add_subplot(self.fig)
+        self.axes = self.models[0].subplots(self.fig)
 
     def interact(self):
         tab = self.widget_layout()
@@ -68,14 +68,13 @@ class IPWInteract(tr.HasTraits):
     def change_tab(self, change=None):
         index = self.tab.selected_index
         self.fig.clf()
-        self.axes = self.models[index].add_subplot(self.fig)
+        self.axes = self.models[index].subplots(self.fig)
         self.update_plot(index)
 
     def update_plot(self, index):
         '''update the visualization with updated models'''
-        self.axes
         _axes = self.axes
-        if not (type(_axes) in [list, tuple]):
+        if not hasattr(_axes,'__iter__'):
             _axes = [_axes]
         for ax in _axes:
             ax.clear()
