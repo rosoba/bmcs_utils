@@ -52,6 +52,9 @@ class IPWInteract(tr.HasTraits):
                               constrained_layout=True)
         self.axes = self.models[0].subplots(self.fig)
 
+    def __del__(self):
+        plt.close(self.fig)
+
     def interact(self):
         tab = self.widget_layout()
         display(tab)
