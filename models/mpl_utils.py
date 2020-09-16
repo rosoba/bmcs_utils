@@ -1,3 +1,6 @@
+'''
+Plotting utilities
+'''
 
 def mpl_align_xaxis(ax1, ax2):
     """Align zeros of the two axes, zooming them out by same ratio"""
