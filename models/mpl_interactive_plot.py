@@ -1,9 +1,34 @@
+'''
+Matplotlib enhanced with interactive plotting using ipywidgets.
+
+ - The IPWInteract class can generate a simple interface to a model that
+   inherits from InteractiveModel. The parameters specified in `param_names`
+   are included in the interactive interface.
+
+   Further, the order of param_names can be used to transform the traits
+   of the model into a tuple that calls that can be called the lambdified
+   functions. This feature is useful for direct integration of function
+   derived symbolically using sympy.
+
+   @todo: define param_names as
+   - ipw_interact = ['a', 'b'] as a specifier which values are to be included in the interaction
+   - ipw_observe = ['d', 'e' ]
+
+   @todo: use ipwidget metadata attribute to overload the ipw_map
+'''
+
 import ipywidgets as ipw
 import traits.api as tr
 import matplotlib.pylab as plt
 
 get_params_tuple = lambda param_names, **kw: tuple(kw[name] for name in param_names)
 
+# default mapping between trait types and ipwidgets
+ipw_map = \
+{
+    tr.Float: ipw.FloatSlider,
+    tr.Int: ipw.IntSlider
+}
 
 class IInteractiveModel(tr.Interface):
     '''Interface of interactive models'''
@@ -48,8 +73,14 @@ class IPWInteract(tr.HasTraits):
             IPWModelSliders(model=model, interactor=self, index=i)
             for i, model in enumerate(models)
         ]
-        self.fig = plt.figure(figsize=self.figsize,
-                              constrained_layout=True)
+
+        self.output = ipw.Output()
+        with self.output:
+            f = plt.figure(figsize=self.figsize,
+                        constrained_layout=True)
+        f.canvas.toolbar_position = 'top'
+        f.canvas.header_visible = False
+        self.fig = f
         self.axes = self.models[0].subplots(self.fig)
 
     def __del__(self):
@@ -57,7 +88,8 @@ class IPWInteract(tr.HasTraits):
 
     def interact(self):
         tab = self.widget_layout()
-        display(tab)
+        vb = ipw.VBox([self.output, tab])
+        display(vb)
 
     def widget_layout(self):
         self.tab = ipw.Tab()
@@ -71,7 +103,7 @@ class IPWInteract(tr.HasTraits):
     def change_tab(self, change=None):
         index = self.tab.selected_index
         self.fig.clf()
-        self.axes = self.models[index].subplots(self.fig)
+        self.axes = self.ipw_elements[index].subplots(self.fig)
         self.update_plot(index)
 
     def update_plot(self, index):
@@ -84,6 +116,7 @@ class IPWInteract(tr.HasTraits):
         self.ipw_elements[index].update_plot(self.axes)
         if len(self.tab.children) > index:
             self.tab.selected_index=index
+        self.fig.canvas.draw()
 
 
 class IPWModelSliders(IPWElement):
@@ -103,34 +136,46 @@ class IPWModelSliders(IPWElement):
         traits = self.model.traits(param=True)
         vals = self.model.trait_get(param=True)
         val_ = [vals[name] for name in param_names]
+        traits_ = [traits[name] for name in param_names]
         minmax_ = [getattr(traits[name], 'minmax', 2) for name in param_names]
         latex_ = [getattr(traits[name], 'latex', r'<none>') for name in param_names]
-        return {name: ipw.FloatSlider(
+#        return {name: ipw.FloatSlider(
+        return {name: ipw_map[trait_.trait_type.__class__](
             value=val, min=minmax[0], max=minmax[1],
             step=(minmax[1] - minmax[0]) / self.n_steps,
             continuous_update=False,
             description=r'\(%s\)' % latex)
-            for (name, val, latex, minmax) in
-            zip(param_names, val_, latex_, minmax_)
+            for (name, trait_, val, latex, minmax) in
+            zip(param_names, traits_, val_, latex_, minmax_)
         }
 
-    def update(self, **values):
-        self.model.trait_set(**values)
+    def slider_changed(self, change):
+        key = change.owner.key
+        val = change.new
+        keyval = {key:val}
+        self.model.trait_set(**keyval)
         self.interactor.update_plot(self.index)
 
     def widget_layout(self):
         sliders = self.get_sliders()
-        out = ipw.interactive_output(self.update, sliders);
+        for key, slider in sliders.items():
+            slider.key = key
+            slider.observe(self.slider_changed,'value')
+        # Originally, the interactive_ouput widget was used
+        # here. But in this way, the update method was called
+        # earlier than the tab change observer of the interactor
+        # This caused problems if axes object did not correspond
+        # to the model's update_plot method. Therefore,
+        # slider observer is now used , augmented with the trait name.
+        # out = ipw.interactive_output(self.update, sliders);
         layout = ipw.Layout(grid_template_columns='1fr 1fr')
         param_names = self.model.param_names
         param_sliders_list = [sliders[name] for name in param_names]
         grid = ipw.GridBox(param_sliders_list, layout=layout)
-        box = ipw.VBox([grid, out])
-        return box
+        return grid
 
-    def subplots(self):
-        return self.model.subplots()
+    def subplots(self, fig):
+        return self.model.subplots(fig)
 
     def update_plot(self, axes):
         self.model.update_plot(axes)
-
