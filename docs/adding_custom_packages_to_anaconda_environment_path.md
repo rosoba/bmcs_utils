@@ -15,6 +15,9 @@ However, to use custom Python packages in a Python module that is located outsid
 If Anaconda is used as the Python environment perform the following command in the Anaconda Prompt:\
 `conda-develop /path/to/my_python_packages`
 
+_How it works?_\
+This command will simply add the file `"USER_HOME_DIRECTORY\Anaconda3\Lib\site-packages\conda.pth"` which contains the paths.
+
 ### Example
 
 * We have the following custom Python packages:
@@ -28,7 +31,7 @@ If Anaconda is used as the Python environment perform the following command in t
 
 **Note for PyCharm:**\
 Now as long as you're using the Python interpreter that comes with Anaconda environment 
-within your PyCharm project, you should be able to import your packages.\
+within your PyCharm project, you should be able to import your packages.
 
 ![pycharm_project_interpreter_1](./images/pycharm_project_interpreter_1.png)
 ![pycharm_project_interpreter_2](./images/pycharm_project_interpreter_2.png)
