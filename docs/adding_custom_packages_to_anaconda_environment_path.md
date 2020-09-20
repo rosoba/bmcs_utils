@@ -1,5 +1,61 @@
 
-## Instructions for adding custom Python packages to Anaconda environment path
+# Setup the BMCS development environment
+
+## Miniconda / Anaconda
+
+The packages used in the development of the BMCS tool suite can be conveniently 
+accessed from within the miniconda minimal setup. The installation for 
+all platforms is provided here:
+
+https://docs.conda.io/en/latest/miniconda.html
+
+## Git
+
+Install the git package. 
+For linux use:
+
+sudo apt-get install git
+
+For windows usd:
+
+## PyCharm
+
+register and pickup the professional academic free version
+https://www.jetbrains.com/pycharm/download
+
+Follow the instructions there to install it.
+
+## Clone bmcs repositories 
+
+Start pycharm. In the introductory window select 
+- open from version control system. Register using the github.com
+credentials. Clone the repository
+
+bmcs-group/bmcs_utils
+
+## Setup your environment 
+
+In the root directory of this package, there is the environment.yml 
+file specifying all packages required for the execution and development
+of bmcs packages. Issue the command:
+
+conda env create -f=environment.yml
+
+which will install the scientific computing environment called bmcs.
+You can activate the individual conda environments using the commands
+
+conda env list
+conda activate bmcs
+
+In all your bmcs pycharm projects define the Python interpreter from choose the 
+the bmcs conda environment. This will set up all the other dependencies 
+correspondingly.
+
+## Setup the import path for bmcs packages
+ 
+Since the bmcs packages can refer to each other within your 
+pycharm project directory add the path to this directory to your 
+bmcs conda environment.
 
 ### Why?
 
