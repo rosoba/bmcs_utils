@@ -78,10 +78,10 @@ class InjectSymbExpr(tr.HasTraits):
     Inject expressions into a model class
     '''
 
-    inject_sym_class = tr.Type
+    symb_class = tr.Type
 
-    injected = tr.Instance(SymbExpr)
+    symb = tr.Instance(SymbExpr)
 
     def traits_init(self):
-        self.injected = self.inject_sym_class(model = self)
+        self.symb = self.symb_class(model = self)
 

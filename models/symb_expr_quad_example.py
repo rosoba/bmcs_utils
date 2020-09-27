@@ -28,7 +28,7 @@ class QuadraticSym(SymbExpr):
 
 class QuadraticModel(InteractiveModel,InjectSymbExpr):
 
-    inject_sym_class = QuadraticSym
+    symb_class = QuadraticSym
 
     a = tr.Float(8, param=True)
     b = tr.Float(3, param=True)
@@ -36,8 +36,8 @@ class QuadraticModel(InteractiveModel,InjectSymbExpr):
 
     def update_plot(self, ax):
         x = np.linspace(-10,10,100)
-        ax.plot(self.injected.get_y(x))
-        ax.plot(self.injected.get_dx_dy(y))
+        ax.plot(self.symb.get_y(x))
+        ax.plot(self.symb.get_dx_dy(y))
 
 qm = QuadraticModel()
-print(qm.injected.get_y_x(3))
+print(qm.symb.get_y_x(3))
