@@ -7,16 +7,16 @@ In Anaconda command prompt execute the following commands
 
 2. Activate the tool on global Git configuration so it work on all your local repositories using
    * **Windows**\
-`mkdir -p ~\.config\git`\
-`nbstripout --install --global --attributes=~\.config\git\attributes`
+`mkdir %USERPROFILE%\.config\git`\
+`nbstripout --install --global --attributes=%USERPROFILE%\.config\git\attributes`
 
    * **Linux**\
 `mkdir -p ~/.config/git`\
 `nbstripout --install --global --attributes=~/.config/git/attributes`
 
-Now, when you **push** a Jupyter Notebook file, the `nbstripout` tool will tell Git to ignore the output cells and the execution count numbers leaving your local Jupyter file unchanged, but enabling you to push a clean Jupyter file to the repository.
+Now, when you **push** a Jupyter Notebook file, the `nbstripout` tool will tell Git to ignore the output cells and the execution count numbers, leaving your local Jupyter file unchanged. It will enable you to push a clean Jupyter file to the repository.
 
-How it works?
+How does it work?
 
 The tool adds a Git filter to these files\
 `USER_HOME_DIRECTORY\.config\git\attributes`\
