@@ -10,7 +10,7 @@ import traits.api as tr
 from bmcs_utils.api import InteractiveModel
 
 
-class LambdifiedExpressions(tr.HasStrictTraits):
+class SymbExpr(tr.HasStrictTraits):
     '''
     Symbolic expressions derived as a basis of the model implementation.
     This class assists in the transformation of expressions derived
@@ -73,14 +73,14 @@ class LambdifiedExpressions(tr.HasStrictTraits):
 #                lambda *args: callable(*(args+self.get_model_params(self.model)))
             )
 
-class InjectSymExpr(tr.HasTraits):
+class InjectSymbExpr(tr.HasTraits):
     '''
     Inject expressions into a model class
     '''
 
     inject_sym_class = tr.Type
 
-    injected = tr.Instance(LambdifiedExpressions)
+    injected = tr.Instance(SymbExpr)
 
     def traits_init(self):
         self.injected = self.inject_sym_class(model = self)

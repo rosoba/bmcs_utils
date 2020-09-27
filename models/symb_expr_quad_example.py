@@ -1,9 +1,9 @@
 import sympy as sp
-from bmcs_utils.api import InteractiveModel
+from bmcs_utils.api import InteractiveModel, SymbExpr, InjectSymbExpr
 import traits.api as tr
-from lambdified_expressions import LambdifiedExpressions, InjectSymExpr
 
-class QuadraticSym(LambdifiedExpressions):
+
+class QuadraticSym(SymbExpr):
     #-------------------------------------------------------------------------
     # Symbolic derivation of expressions
     #-------------------------------------------------------------------------
@@ -26,7 +26,7 @@ class QuadraticSym(LambdifiedExpressions):
         ('dy_dx', ('x',)),
     ]
 
-class QuadraticModel(InteractiveModel,InjectSymExpr):
+class QuadraticModel(InteractiveModel,InjectSymbExpr):
 
     inject_sym_class = QuadraticSym
 

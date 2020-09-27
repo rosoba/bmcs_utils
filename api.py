@@ -1,5 +1,5 @@
 
 from .models.mpl_interactive_plot import InteractiveModel, IPWInteract
 from .models.mpl_utils import mpl_align_xaxis
-from .models.lambdified_expressions import LambdifiedExpressions, InjectSymExpr
+from .models.symb_expr import SymbExpr, InjectSymbExpr
 
