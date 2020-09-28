@@ -23,7 +23,7 @@ class SymbExpr(tr.HasStrictTraits):
     # names of state and control variables to use as default for the
     # lambdify method - in case there are no variables specified in the
     # expressions tuple
-    sym_names = []
+    symb_variables = []
 
     # names of attributes denoting the symbols that constitute
     # the input to the model
@@ -45,7 +45,7 @@ class SymbExpr(tr.HasStrictTraits):
 
     def traits_init(self):
         # gather the symbols and construct an ordered tuple
-        default_symbols = tuple([getattr(self, sym_name) for sym_name in self.sym_names])
+        default_symbols = tuple([getattr(self, sym_name) for sym_name in self.symb_variables])
         for expression in self.symb_expressions:
             if isinstance(expression, Iterable):
                 expr_name, sym_names = expression
