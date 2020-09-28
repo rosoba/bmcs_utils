@@ -39,7 +39,7 @@ In the root directory of this package, there is the environment.yml
 file specifying all packages required for the execution and development
 of bmcs packages. Issue the command:
 
-conda env create -f=environment.yml
+conda env create -f environment.yml
 
 which will install the scientific computing environment called bmcs.
 You can activate the individual conda environments using the commands

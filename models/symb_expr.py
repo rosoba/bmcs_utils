@@ -9,7 +9,6 @@ from collections.abc import Iterable
 import traits.api as tr
 from bmcs_utils.api import InteractiveModel
 
-
 class SymbExpr(tr.HasStrictTraits):
     '''
     Symbolic expressions derived as a basis of the model implementation.
@@ -21,21 +20,27 @@ class SymbExpr(tr.HasStrictTraits):
     input parameters.
     '''
 
+    # names of state and control variables to use as default for the
+    # lambdify method - in case there are no variables specified in the
+    # expressions tuple
+    sym_names = []
+
     # names of attributes denoting the symbols that constitute
     # the input to the model
     model_params = []
-
-    sym_names = []
 
     # names of expressions that map the symbols to callable functions
     #
     expressions = []
 
-    model = tr.WeakRef(InteractiveModel)
+    # link to an model application accessing the symbolic expressions
+    # provided here
+    model = tr.WeakRef
 
-    def get_model_params(self, model):
+    # @todo: check if the model can be taken from the refernce
+    def get_model_params(self):
         return tuple([
-            getattr(model,param_name) for param_name in self.model_params
+            getattr(self.model,param_name) for param_name in self.model_params
         ])
 
     def traits_init(self):
@@ -58,10 +63,10 @@ class SymbExpr(tr.HasStrictTraits):
             callable = sp.lambdify(symbols+param_symbols, expr, 'numpy')
 #            callable = sp.lambdify(symbols, expr, 'numpy', dummify=True)
             def define_callable(callable):
-                def on_the_fly(*new_args):
+                def on_the_fly(*args):
                     # print('==========================')
                     # print('name', expr_name)
-                    all_args = new_args + self.get_model_params(self.model)
+                    all_args = args + self.get_model_params()
                     # print('args',all_args)
                     result = callable(*all_args)
                     # print('result', result)
