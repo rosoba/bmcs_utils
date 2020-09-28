@@ -30,10 +30,10 @@ class QuadraticSym(SymbExpr):
     # Declaration of the lambdified methods
     #-------------------------------------------------------------------------
 
-    model_params = ['a', 'b', 'c']
+    symb_model_params = ['a', 'b', 'c']
 
     # List of expressions for which the methods `get_`
-    expressions = [
+    symb_expressions = [
         ('y_x', ('x',)),
         ('dy_dx', ('x',)),
     ]

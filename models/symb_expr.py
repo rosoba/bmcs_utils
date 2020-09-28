@@ -27,11 +27,11 @@ class SymbExpr(tr.HasStrictTraits):
 
     # names of attributes denoting the symbols that constitute
     # the input to the model
-    model_params = []
+    symb_model_params = []
 
     # names of expressions that map the symbols to callable functions
     #
-    expressions = []
+    symb_expressions = []
 
     # link to an model application accessing the symbolic expressions
     # provided here
@@ -40,13 +40,13 @@ class SymbExpr(tr.HasStrictTraits):
     # @todo: check if the model can be taken from the refernce
     def get_model_params(self):
         return tuple([
-            getattr(self.model,param_name) for param_name in self.model_params
+            getattr(self.model,param_name) for param_name in self.symb_model_params
         ])
 
     def traits_init(self):
         # gather the symbols and construct an ordered tuple
         default_symbols = tuple([getattr(self, sym_name) for sym_name in self.sym_names])
-        for expression in self.expressions:
+        for expression in self.symb_expressions:
             if isinstance(expression, Iterable):
                 expr_name, sym_names = expression
                 symbols = tuple([getattr(self, sym_name) for sym_name in sym_names])
@@ -58,7 +58,7 @@ class SymbExpr(tr.HasStrictTraits):
                     'expected name of expression attribute with a list of variables'
                 )
             param_symbols = tuple([getattr(self, model_param)
-                                   for model_param in self.model_params])
+                                   for model_param in self.symb_model_params])
             expr = getattr(self, expr_name)
             callable = sp.lambdify(symbols+param_symbols, expr, 'numpy')
 #            callable = sp.lambdify(symbols, expr, 'numpy', dummify=True)
