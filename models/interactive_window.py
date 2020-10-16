@@ -25,10 +25,11 @@ import matplotlib.pylab as plt
 #
 # default mapping between trait types and ipwidgets
 ipw_map = \
-{
-    tr.Float: ipw.FloatSlider,
-    tr.Int: ipw.IntSlider
-}
+    {
+        tr.Float: ipw.FloatSlider,
+        tr.Int: ipw.IntSlider
+    }
+
 
 class Item(tr.HasTraits):
     """Item of interaction with a model
@@ -36,9 +37,11 @@ class Item(tr.HasTraits):
     name = tr.Str
     latex = tr.Str
     minmax = tr.Tuple
-    def __init__(self,name,**traits):
+
+    def __init__(self, name, **traits):
         self.name = name
         tr.HasTraits.__init__(self, **traits)
+
 
 class View(tr.HasTraits):
     """Container of IPWItems
@@ -46,9 +49,9 @@ class View(tr.HasTraits):
     content = tr.List(Item)
     item_names = tr.List(tr.Str)
 
-    #-------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     #  Initializes the object:
-    #-------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
 
     def __init__(self, *values, **traits):
         """ Initializes the object.
@@ -58,8 +61,10 @@ class View(tr.HasTraits):
             self.content.append(item)
             self.item_names.append(item.name)
 
+
 class IInteractiveModel(tr.Interface):
     """Interface of interactive models"""
+
 
 @tr.provides(IInteractiveModel)
 class InteractiveModel(tr.HasTraits):
@@ -71,8 +76,15 @@ class InteractiveModel(tr.HasTraits):
     def subplots(self, fig):
         return fig.subplots(1, 1)
 
+    def plot(self, axes):
+        '''Alias to update plot - to be overloaded by subclasses'''
+        self.update_plot(axes)
+
     def update_plot(self, axes):
         raise NotImplementedError()
+
+    def interact(self):
+        return InteractiveWindow(self).interact()
 
 class InteractiveWindow(tr.HasTraits):
     '''Container class synchronizing the interaction elements with plotting area.
@@ -82,7 +94,7 @@ class InteractiveWindow(tr.HasTraits):
 
     ipw_model_tabs = tr.List
 
-    figsize = tr.Tuple(8,3)
+    figsize = tr.Tuple(8, 3)
 
     def __init__(self, models, **kw):
         super(InteractiveWindow, self).__init__(**kw)
@@ -95,7 +107,7 @@ class InteractiveWindow(tr.HasTraits):
         ]
         self.output = ipw.Output()
         with self.output:
-            f = plt.figure(figsize=self.figsize,constrained_layout=True)
+            f = plt.figure(figsize=self.figsize, constrained_layout=True)
         f.canvas.toolbar_position = 'top'
         f.canvas.header_visible = False
         self.fig = f
@@ -114,7 +126,7 @@ class InteractiveWindow(tr.HasTraits):
         keyval = [(elem.model.name, elem) for elem in self.ipw_model_tabs]
         self.tab.children = tuple(value.widget_layout() for _, value in keyval)
         [self.tab.set_title(i, key) for i, (key, val) in enumerate(keyval)]
-        self.tab.observe(self.change_tab,'selected_index')
+        self.tab.observe(self.change_tab, 'selected_index')
         self.change_tab()
         return self.tab
 
@@ -127,14 +139,17 @@ class InteractiveWindow(tr.HasTraits):
     def update_plot(self, index):
         '''update the visualization with updated models'''
         _axes = self.axes
-        if not hasattr(_axes,'__iter__'):
+        if not hasattr(_axes, '__iter__'):
             _axes = [_axes]
         for ax in _axes:
             ax.clear()
         self.ipw_model_tabs[index].update_plot(self.axes)
         if len(self.tab.children) > index:
-            self.tab.selected_index=index
+            self.tab.selected_index = index
         self.fig.canvas.draw()
+
+
+from traits.trait_base import is_none
 
 
 class ModelTab(tr.HasTraits):
@@ -157,8 +172,8 @@ class ModelTab(tr.HasTraits):
         item_names = ipw_view.item_names
         minmax_ = [ipw_item.minmax for ipw_item in ipw_view.content]
         latex_ = [ipw_item.latex for ipw_item in ipw_view.content]
-        traits = self.model.traits()
-        vals = self.model.trait_get()
+        traits = self.model.traits(transient=is_none)
+        vals = self.model.trait_get(transient=is_none)
         traits_ = [traits[name] for name in item_names]
         val_ = [vals[name] for name in item_names]
         return {name: ipw_map[trait_.trait_type.__class__](
@@ -173,7 +188,7 @@ class ModelTab(tr.HasTraits):
     def slider_changed(self, change):
         key = change.owner.key
         val = change.new
-        keyval = {key:val}
+        keyval = {key: val}
         self.model.trait_set(**keyval)
         self.interactor.update_plot(self.index)
 
@@ -181,7 +196,7 @@ class ModelTab(tr.HasTraits):
         sliders = self.get_sliders()
         for key, slider in sliders.items():
             slider.key = key
-            slider.observe(self.slider_changed,'value')
+            slider.observe(self.slider_changed, 'value')
         # Originally, the interactive_ouput widget was used
         # here. But in this way, the update method was called
         # earlier than the tab change observer of the interactor
