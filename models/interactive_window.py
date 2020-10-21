@@ -38,6 +38,13 @@ class Item(tr.HasTraits):
     latex = tr.Str
     minmax = tr.Tuple
 
+    latex_str = tr.Property
+    def _get_latex_str(self):
+        if self.latex:
+            return self.latex
+        else:
+            return self.name
+
     def __init__(self, name, **traits):
         self.name = name
         tr.HasTraits.__init__(self, **traits)
@@ -171,7 +178,7 @@ class ModelTab(tr.HasTraits):
         ipw_view = self.model.ipw_view
         item_names = ipw_view.item_names
         minmax_ = [ipw_item.minmax for ipw_item in ipw_view.content]
-        latex_ = [ipw_item.latex for ipw_item in ipw_view.content]
+        latex_ = [ipw_item.latex_str for ipw_item in ipw_view.content]
         traits = self.model.traits(transient=is_none)
         vals = self.model.trait_get(transient=is_none)
         traits_ = [traits[name] for name in item_names]

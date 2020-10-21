@@ -65,9 +65,7 @@ class SymbExpr(tr.HasStrictTraits):
             def define_callable(callable):
                 def on_the_fly(*args):
                     # print('==========================')
-                    # print('name', expr_name)
                     all_args = args + self.get_model_params()
-                    # print('args',all_args)
                     result = callable(*all_args)
                     # print('result', result)
                     # print('==========================')
