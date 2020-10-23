@@ -60,12 +60,14 @@ class SymbExpr(tr.HasStrictTraits):
             param_symbols = tuple([getattr(self, model_param)
                                    for model_param in self.symb_model_params])
             expr = getattr(self, expr_name)
+            # print('defining', expr_name, ':', symbols+param_symbols)
             callable = sp.lambdify(symbols+param_symbols, expr, 'numpy')
 #            callable = sp.lambdify(symbols, expr, 'numpy', dummify=True)
             def define_callable(callable):
                 def on_the_fly(*args):
                     # print('==========================')
                     all_args = args + self.get_model_params()
+                    # print('calling', expr_name, ':', all_args)
                     result = callable(*all_args)
                     # print('result', result)
                     # print('==========================')

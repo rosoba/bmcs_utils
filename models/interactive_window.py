@@ -21,13 +21,11 @@ import ipywidgets as ipw
 import traits.api as tr
 import matplotlib.pylab as plt
 
-# get_params_tuple = lambda param_names, **kw: tuple(kw[name] for name in param_names)
-#
-# default mapping between trait types and ipwidgets
 ipw_map = \
     {
         tr.Float: ipw.FloatSlider,
-        tr.Int: ipw.IntSlider
+        tr.Int: ipw.IntSlider,
+        tr.Bool: ipw.ToggleButton
     }
 
 
@@ -38,7 +36,11 @@ class Item(tr.HasTraits):
     latex = tr.Str
     minmax = tr.Tuple
 
+    editor = None
+    '''Overload the editor defined in the trait type'''
+
     latex_str = tr.Property
+
     def _get_latex_str(self):
         if self.latex:
             return self.latex
@@ -48,6 +50,21 @@ class Item(tr.HasTraits):
     def __init__(self, name, **traits):
         self.name = name
         tr.HasTraits.__init__(self, **traits)
+
+    def get_editor(self, value, trait, model):
+        if self.editor:
+            editor = self.editor
+        else:
+            # create a new edior using the factory provided by the trait type
+            if trait.trait_type.editor_factory == None:
+                raise TypeError('no editor for %s with type %s' % (self.name,trait.trait_type) )
+            editor = trait.trait_type.editor_factory()
+        # use the editor supplied in the item defintion and set its attributes
+        editor.label = self.latex_str
+        editor.value = value
+        editor.trait = trait
+        editor.model = model
+        return editor
 
 
 class View(tr.HasTraits):
@@ -92,6 +109,7 @@ class InteractiveModel(tr.HasTraits):
 
     def interact(self):
         return InteractiveWindow(self).interact()
+
 
 class InteractiveWindow(tr.HasTraits):
     '''Container class synchronizing the interaction elements with plotting area.
@@ -174,15 +192,15 @@ class ModelTab(tr.HasTraits):
     n_steps = tr.Int(20)
 
     # @todo: an alternative implementation - analogy to traitsui.View
-    def get_sliders(self):
+    def get_editors2(self):
         ipw_view = self.model.ipw_view
         item_names = ipw_view.item_names
         minmax_ = [ipw_item.minmax for ipw_item in ipw_view.content]
         latex_ = [ipw_item.latex_str for ipw_item in ipw_view.content]
         traits = self.model.traits(transient=is_none)
-        vals = self.model.trait_get(transient=is_none)
+        values = self.model.trait_get(transient=is_none)
         traits_ = [traits[name] for name in item_names]
-        val_ = [vals[name] for name in item_names]
+        val_ = [values[name] for name in item_names]
         return {name: ipw_map[trait_.trait_type.__class__](
             value=val, min=minmax[0], max=minmax[1],
             step=(minmax[1] - minmax[0]) / self.n_steps,
@@ -192,18 +210,38 @@ class ModelTab(tr.HasTraits):
             zip(item_names, traits_, val_, latex_, minmax_)
         }
 
-    def slider_changed(self, change):
-        key = change.owner.key
+    # @todo: an alternative implementation - analogy to traitsui.View
+    def get_editors(self):
+        ipw_view = self.model.ipw_view
+        item_names = ipw_view.item_names
+        items = ipw_view.content
+        traits = self.model.traits(transient=is_none)
+        traits = self.model.traits(transient=is_none)
+        values = self.model.trait_get(transient=is_none)
+        traits_ = [traits[name] for name in item_names]
+        values_ = [values[name] for name in item_names]
+        editors = {
+            item.name: item.get_editor(value_, trait_, self.model)
+            for (item, trait_, value_) in
+            zip(items, traits_, values_)
+        }
+        return editors
+
+    def ipw_editor_changed(self, change):
+        name = change.owner.name
         val = change.new
-        keyval = {key: val}
+        keyval = {name: val}
         self.model.trait_set(**keyval)
         self.interactor.update_plot(self.index)
 
     def widget_layout(self):
-        sliders = self.get_sliders()
-        for key, slider in sliders.items():
-            slider.key = key
-            slider.observe(self.slider_changed, 'value')
+        editors = self.get_editors()
+        ipw_editors = {}
+        for name, editor in editors.items():
+            ipw_editor = editor.render()
+            ipw_editor.name = name
+            ipw_editor.observe(self.ipw_editor_changed, 'value')
+            ipw_editors[name] = ipw_editor
         # Originally, the interactive_ouput widget was used
         # here. But in this way, the update method was called
         # earlier than the tab change observer of the interactor
@@ -214,8 +252,8 @@ class ModelTab(tr.HasTraits):
         layout = ipw.Layout(grid_template_columns='1fr 1fr')
         ipw_view = self.model.ipw_view
         item_names = ipw_view.item_names
-        item_sliders_list = [sliders[name] for name in item_names]
-        grid = ipw.GridBox(item_sliders_list, layout=layout)
+        item_editors_list = [ipw_editors[name] for name in item_names]
+        grid = ipw.GridBox(item_editors_list, layout=layout)
         return grid
 
     def subplots(self, fig):
