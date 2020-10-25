@@ -11,3 +11,7 @@ three development phases:
 The list of questions and answers related to pa
 
 [Documentation](docs/index.md)
+
+The notebook can be executed directly using the binder service. It takes a while for the repository image to build up.
+
+[![Binder](https://mybinder.org/badge.svg)](https://mybinder.org/v2/gh/bmcs-group/bmcs_utils.git/master?urlpath=%2Fapps%2Fmodels/test_editor.ipynb) - Start a simple example
