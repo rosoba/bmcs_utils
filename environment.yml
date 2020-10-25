@@ -9,5 +9,4 @@ dependencies:
 - numpy
 - sympy
 - ipywidgets
-
-
+- ipyml
