@@ -31,9 +31,9 @@ setup(
                      'texfiles/scidoc.cls',
                      ]
     },
-    install_requires=[
-        'ipywidgets', 'matplotlib-base', 'sympy', 'numpy', 'traits', 'ipympl'
-    ],
+    # install_requires=[
+    #     'ipywidgets', 'matplotlib-base', 'sympy', 'numpy', 'traits', 'ipympl'
+    # ],
     include_package_data=True,
     long_description='',
     entry_points={

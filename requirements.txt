@@ -1,6 +1,6 @@
-sympy
-traits
-ipywidgets
-matplotlib-base
-numpy
-ipympl
+# sympy
+# traits
+# ipywidgets
+# matplotlib-base
+# numpy
+# ipympl
