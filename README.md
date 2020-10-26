@@ -16,6 +16,6 @@ The notebook can be executed directly using the binder service. It takes a while
 
 [![Binder](https://mybinder.org/badge.svg)](https://mybinder.org/v2/gh/bmcs-group/bmcs_utils.git/master?urlpath=%2Fapps%2Fbmcs_utils/test_editor.ipynb) - Start a simple example
 
-[![Binder](https://mybinder.org/badge.svg)](https://mybinder.org/v2/gh/bmcs-group/bmcs_utils/setup.py/master?filepath=bmcs_utils%2Ftest_editor.ipynb) run it just as a script - no appmode
+[![Binder](https://mybinder.org/badge.svg)](https://mybinder.org/v2/gh/bmcs-group/bmcs_utils.git/setup.py/master?filepath=bmcs_utils%2Ftest_editor.ipynb) run it just as a script - no appmode
 
 [![Binder](https://mybinder.org/badge.svg)](https://mybinder.org/v2/gh/binder-examples/setup.py/master?filepath=example_notebook%2Fimport_mypackage.ipynb)
