@@ -10,3 +10,6 @@ dependencies:
 - sympy
 - ipywidgets
 - ipympl
+- pip
+- pip:
+    - bmcs_utils

@@ -32,7 +32,7 @@ setup(
                      ]
     },
     install_requires=[
-        'ipywidgets', 'matplotlib-base', 'sympy', 'numpy', 'traits'
+        'ipywidgets', 'matplotlib-base', 'sympy', 'numpy', 'traits', 'ipympl'
     ],
     include_package_data=True,
     long_description='',
