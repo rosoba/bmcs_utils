@@ -1,6 +1,6 @@
-from models.trait_types import \
+from bmcs_utils.trait_types import \
     Float, Int, Bool, FloatRangeEditor, Range
-from models.interactive_window import InteractiveModel, Item, View
+from bmcs_utils.interactive_window import InteractiveModel, Item, View
 import numpy as np
 
 class ExampleModel(InteractiveModel):

@@ -14,7 +14,7 @@ from version import CURRENT_VERSION
 
 # Package meta-data.
 NAME = 'bmcs_utils'
-DESCRIPTION = "Suite of utilities for to implementation of models for brittle-matrix composites."
+DESCRIPTION = "Suite of utilities for to implementation of bmcs_utils for brittle-matrix composites."
 URL = 'https://github.com/bmcs-group/bmcs_utils'
 EMAIL = 'rostislav.chudoba@rwt-aachen.de'
 AUTHOR = 'BMCS-Group'
@@ -58,7 +58,7 @@ else:
 class UploadCommand(Command):
     """Support setup.py upload."""
 
-    description = 'Build and publish the package.'
+    description = 'Build the package.'
     user_options = []
 
     @staticmethod
@@ -84,6 +84,32 @@ class UploadCommand(Command):
 
         self.status('Uploading the package to PyPI via Twine…')
         os.system('twine upload dist/*')
+
+        sys.exit()
+
+class ReleaseCommand(Command):
+    """Support setup.py upload."""
+
+    description = 'Release the package.'
+    user_options = []
+
+    @staticmethod
+    def status(s):
+        """Prints things in bold."""
+        print('\033[1m{0}\033[0m'.format(s))
+
+    def initialize_options(self):
+        pass
+
+    def finalize_options(self):
+        pass
+
+    def run(self):
+        try:
+            self.status('Removing previous builds…')
+            rmtree(os.path.join(here, 'dist'))
+        except OSError:
+            pass
 
         self.status('Pushing git tags…')
         os.system('git tag v{0}'.format(about['__version__']))

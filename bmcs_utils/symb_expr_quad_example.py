@@ -1,7 +1,7 @@
 import sympy as sp
 import traits.api as tr
 import numpy as np
-from models.symb_expr import SymbExpr, InjectSymbExpr
+from bmcs_utils.symb_expr import SymbExpr, InjectSymbExpr
 
 class QuadraticSym(SymbExpr):
     # -------------------------------------------------------------------------

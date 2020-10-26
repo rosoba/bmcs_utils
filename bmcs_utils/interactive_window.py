@@ -98,12 +98,12 @@ class View(tr.HasTraits):
     """
 
 class IInteractiveModel(tr.Interface):
-    """Interface of interactive models"""
+    """Interface of interactive bmcs_utils"""
 
 
 @tr.provides(IInteractiveModel)
 class InteractiveModel(tr.HasTraits):
-    """Base class for interactive models
+    """Base class for interactive bmcs_utils
     """
 
     name = tr.Str("<unnamed>")
@@ -171,7 +171,7 @@ class InteractiveWindow(tr.HasTraits):
         self.update_plot(index)
 
     def update_plot(self, index):
-        '''update the visualization with updated models'''
+        '''update the visualization with updated bmcs_utils'''
         self.fig.clf()
         self.axes = self.ipw_model_tabs[index].subplots(self.fig)
         _axes = self.axes
