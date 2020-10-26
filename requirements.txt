@@ -1,5 +1,6 @@
-sympy~=1.5.1
-traits~=5.1.2
-ipywidgets~=7.5.1
-matplotlib~=3.2.1
-numpy~=1.16.6
+sympy
+traits
+ipywidgets
+matplotlib
+numpy
+ipympl
