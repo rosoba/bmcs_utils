@@ -1,6 +1,6 @@
 
 import traits.api as tr
-from bmcs_utils.models.editors import \
+from models.editors import \
     IntEditor, BoolEditor, FloatEditor, FloatRangeEditor, \
     ProgressEditor, ButtonEditor
 

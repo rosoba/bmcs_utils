@@ -1,5 +1,5 @@
 
-from bmcs_utils.models.interactive_window import \
+from models.interactive_window import \
     InteractiveModel, View, Item, InteractiveWindow
 
 from bmcs_utils.models.trait_types import \

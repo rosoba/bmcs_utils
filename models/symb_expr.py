@@ -7,7 +7,6 @@ and executable Python classes.
 import sympy as sp
 from collections.abc import Iterable
 import traits.api as tr
-from bmcs_utils.api import InteractiveModel
 
 class SymbExpr(tr.HasStrictTraits):
     '''

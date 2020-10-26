@@ -1,5 +1,6 @@
-from bmcs_utils.api import \
-    Float, Int, Bool, InteractiveModel, View, Item, FloatRangeEditor, Range
+from models.trait_types import \
+    Float, Int, Bool, FloatRangeEditor, Range
+from models.interactive_window import InteractiveModel, Item, View
 import numpy as np
 
 class ExampleModel(InteractiveModel):
