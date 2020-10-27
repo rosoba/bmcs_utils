@@ -11,4 +11,4 @@ dependencies:
 - ipywidgets
 - ipympl
 - pip:
-  - -e
+  - -e .
