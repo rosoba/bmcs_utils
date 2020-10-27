@@ -10,3 +10,5 @@ dependencies:
 - sympy
 - ipywidgets
 - ipympl
+- pip:
+  - -e
