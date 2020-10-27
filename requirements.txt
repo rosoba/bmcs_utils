@@ -1,6 +1,0 @@
-# sympy
-# traits
-# ipywidgets
-# matplotlib-base
-# numpy
-# ipympl

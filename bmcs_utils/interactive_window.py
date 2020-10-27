@@ -63,9 +63,7 @@ class Item(tr.HasTraits):
         editor.name = self.name
         editor.label = self.latex_str
         desc = trait.desc
-        print('DESC', self.name, trait, trait.desc)
         if desc:
-            print('addeing tooltip', desc)
             editor.tooltip = desc
         else:
             editor.tooltip = self.name
