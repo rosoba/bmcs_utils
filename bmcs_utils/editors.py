@@ -13,13 +13,11 @@ class EditorFactory(tr.HasTraits):
 
 class FloatEditor(EditorFactory):
     def render(self):
-        print('tooltip', self.name, self.tooltip)
         return ipw.FloatText(description=self.label, value=self.value, tooltip=self.tooltip)
 
 
 class IntEditor(EditorFactory):
     def render(self):
-        print('tooltip', self.name, self.tooltip)
         return ipw.IntText(description=self.label, value=self.value, tooltip=self.tooltip)
 
 

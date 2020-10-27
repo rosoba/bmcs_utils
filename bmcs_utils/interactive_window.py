@@ -257,8 +257,6 @@ class ModelTab(tr.HasTraits):
             button.on_click(button_clicked)
             progress_box = ipw.HBox([button, progress_bar], layout=ipw.Layout(padding='5px'))
             vlist.append(progress_box)
-            ft = ipw.FloatText(value=10,description='another',tooltip="my tooltip")
-            vlist.append(ft)
 
         editors = self.get_editors()
         ipw_editors = {}
