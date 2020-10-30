@@ -1,8 +1,5 @@
 
-# How is the dependency between bmcs packages resolved?
-
-This question is solved differently for development 
-installation and for application installation.
+# Lifecycle of a package
 
 In case of development installation, the import 
 path must be set within the current conda environment.

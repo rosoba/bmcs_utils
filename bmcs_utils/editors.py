@@ -39,6 +39,7 @@ class FloatRangeEditor(EditorFactory):
         if self.high_name:
             self.high = getattr(self.model,self.high_name)
         step = (self.high - self.low) / self.n_steps
+        print('Float slider', self.value, self.low, self.high, step)
         return ipw.FloatSlider(
             value=self.value,
             min=self.low,
