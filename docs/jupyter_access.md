@@ -133,7 +133,8 @@ repository it is necessary to strip out the
 output cells to avoid uneceesary conflicts of 
 versions.
 
-### How to activate `stripout`
+### How to activate `nbstripout`
+
 Stripping Jupyter output cells and execution 
 count out while pushing to Git
 
@@ -158,7 +159,7 @@ Now, when you **push** a Jupyter Notebook file,
 the `nbstripout` tool will tell Git to ignore 
 the output cells and the execution count numbers, leaving your local Jupyter file unchanged. It will enable you to push a clean Jupyter file to the repository.
 
-### How does it work?
+### How does `nbstripout` work?
 
 The tool adds a Git filter to these files\
 `USER_HOME_DIRECTORY\.config\git\attributes`\
