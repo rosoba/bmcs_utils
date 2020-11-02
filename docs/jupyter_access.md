@@ -1,7 +1,7 @@
 
 # Jupyter interface / Researcher's perspective
 
-##1 Install miniconda
+## Install miniconda
 
 The packages used in the development of the BMCS tool 
 suite can be conveniently accessed from within the 
@@ -10,7 +10,7 @@ all platforms is provided here:
 
 https://docs.conda.io/en/latest/miniconda.html
 
-##2 Install BMCS packages 
+## Install BMCS packages 
  
 Download the package specification file
 `environment.yml` 
@@ -25,7 +25,7 @@ If you wish to update your environment later you can issue
 conda env update -f environment.yml --prune^C
 ```
 
-##3 Activate `bmcs_env` environment 
+## Activate `bmcs_env` environment 
 
 The list of available environments can be obtained by issuing
 ```
@@ -45,7 +45,7 @@ with the `bmcs_env` environment active and testing
 import bmcs_utils.api as bu
 ```
 
-##4 Setup and configure Jupyter
+## Setup and configure Jupyter
 
 To be able to import them, the runtime configuration in Jupyter and Pycharm
 projects have to be configured with this environment.
@@ -70,7 +70,7 @@ projects have to be configured with this environment.
    kernel name will be displaed at the top right corner
    of the notebook
 
-##6 Enable notebook extensions 
+## Enable notebook extensions 
 It is recommended to use the notebook extensions that 
 include useful features. The extensions have 
 already been installed using `environment.yml`.
@@ -133,6 +133,7 @@ repository it is necessary to strip out the
 output cells to avoid uneceesary conflicts of 
 versions.
 
+### How to activate `stripout`
 Stripping Jupyter output cells and execution 
 count out while pushing to Git
 
@@ -157,7 +158,7 @@ Now, when you **push** a Jupyter Notebook file,
 the `nbstripout` tool will tell Git to ignore 
 the output cells and the execution count numbers, leaving your local Jupyter file unchanged. It will enable you to push a clean Jupyter file to the repository.
 
-How does it work?
+### How does it work?
 
 The tool adds a Git filter to these files\
 `USER_HOME_DIRECTORY\.config\git\attributes`\
