@@ -1,5 +1,5 @@
 
-# Jupyter interface / Researcher perspective
+# Jupyter interface / Researcher's perspective
 
 ##1 Install miniconda
 
@@ -10,7 +10,7 @@ all platforms is provided here:
 
 https://docs.conda.io/en/latest/miniconda.html
 
-##2 Install the BMCS packages with dependencies 
+##2 Install BMCS packages 
  
 Download the package specification file
 `environment.yml` 
@@ -25,7 +25,7 @@ If you wish to update your environment later you can issue
 conda env update -f environment.yml --prune^C
 ```
 
-##3 Activate the environment 
+##3 Activate `bmcs_env` environment 
 
 The list of available environments can be obtained by issuing
 ```
@@ -45,12 +45,17 @@ with the `bmcs_env` environment active and testing
 import bmcs_utils.api as bu
 ```
 
-##4 Setup the jupyter notebook
+##4 Setup and configure Jupyter
 
 To be able to import them, the runtime configuration in Jupyter and Pycharm
 projects have to be configured with this environment.
 
-1) get the ipykernel 
+1) install jupyter
+    ```
+    conda install -c conda-forge jupyter
+    ```
+
+1) install ipykernel 
     ```
     conda install -c conda-forge ipykernel
     ```
@@ -65,10 +70,25 @@ projects have to be configured with this environment.
    kernel name will be displaed at the top right corner
    of the notebook
 
-# Access the jupyter notebooks
+##6 Enable notebook extensions 
+It is recommended to use the notebook extensions that 
+include useful features. The extensions have 
+already been installed using `environment.yml`.
+The particular choice depends on personal preference
+and the context of usage. Recommended extensions
+are:
+
+- table of contents which is useful for long 
+  noteboks explaining the model derivation
+- RISE: which can convert the notebook to a slide 
+  presentation
+- appmode: that converts the notebook to an interactive
+  web application
+
+# Access jupyter notebooks
 
 It is important to note, that only python files are installed
-in the bmcs_env  - no jupyter notebooks. Thus, they
+in the `bmcs_env`  - no jupyter notebooks. Thus, they
 are provided just like `numpy` or `matplotlib` for
 further use in the development of further packages.
 In this way, the deployment of the webapps
@@ -91,49 +111,6 @@ within the development directory. The phase 3
 is the dissemination of the implemented functionality
 in three different ways.
 
-## Set up of the jupyter front-end
-
-## Jupyter in the `bmcs_env` environment
-
-To ensure that your jupyter notebook starts
-with an environment configured for bmcs packages
-activate the environment
-```
-conda activate bmcs_env
-```
-and install jupyter
-```
-conda install -c conda-forge jupyter
-```
-Install the tool generating the kernel for jupyter execution
-```
-conda install -c anaconda ipykernel
-```
-Construct a jupyter kernel using the `bmcs_env` environment
-```
-python -m ipykernel install --user --name bmcs_env
-```
-Execute
-```
-jupyter notebook
-```
-To have all the packages included in the `bmcs_env` 
-ensure that the kernel `bmcs_env` is active when running 
-the nobetook. The kernel can be set in the menu
-**Kernel -> Change kernel**
-
-
-## Notebook extensions 
-It is recommended to use the notebook extensions that 
-include useful features, like
-
-- table of contents which is useful for long 
-  noteboks explaining the model derivation
-- RISE: which can convert the notebook to a slide 
-  presentation
-- appmode: that converts the notebook to an interactive
-  web application
-
 ## Plotting using matplotlib
 
 Matplotlib provides a front end that can be 
@@ -151,6 +128,11 @@ https://github.com/matplotlib/ipympl
 
 ## Version control for jupyter notebooks 
 
+If the jupyter notebooks are pushed to the github
+repository it is necessary to strip out the 
+output cells to avoid uneceesary conflicts of 
+versions.
+
 Stripping Jupyter output cells and execution 
 count out while pushing to Git
 
@@ -160,14 +142,20 @@ In Anaconda command prompt execute the following commands
 
 2. Activate the tool on global Git configuration so it work on all your local repositories using
    * **Windows**\
-`mkdir %USERPROFILE%\.config\git`\
-`nbstripout --install --global --attributes=%USERPROFILE%\.config\git\attributes`
+   ```
+    mkdir %USERPROFILE%\.config\git`
+    nbstripout --install --global --attributes=%USERPROFILE%\.config\git\attributes`
+    ```
 
    * **Linux**\
-`mkdir -p ~/.config/git`\
-`nbstripout --install --global --attributes=~/.config/git/attributes`
+   ```
+    mkdir -p ~/.config/git`
+    nbstripout --install --global --attributes=~/.config/git/attributes`
+   ```
 
-Now, when you **push** a Jupyter Notebook file, the `nbstripout` tool will tell Git to ignore the output cells and the execution count numbers, leaving your local Jupyter file unchanged. It will enable you to push a clean Jupyter file to the repository.
+Now, when you **push** a Jupyter Notebook file, 
+the `nbstripout` tool will tell Git to ignore 
+the output cells and the execution count numbers, leaving your local Jupyter file unchanged. It will enable you to push a clean Jupyter file to the repository.
 
 How does it work?
 

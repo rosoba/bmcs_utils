@@ -41,27 +41,27 @@ cloned using the git versioning control system. The repositories
 are available on `github` in the organization 
 named `bmcs-group`. 
 
-Summary of access perspective, interfaces and roles:
+# Summary of interfaces and roles:
 
- - [**Webapp (student/reader interface):**](webapp_access.md) via web browser by accessing a remote server.
+ - [**Webapp interface (student/reader):**](webapp_access.md) via web browser by accessing a remote server.
    either in a `jupyterhub` or using  `binder` service. This
    mode is inteded for casual readers and student classes 
    that do not need to install anything on their local computer 
    and can directly start to interact with the models via 
    remote webapps.
    
- - [**Jupyter (researcher interface)**](jupyter_access.md) To perform intensive studies of the models, 
+ - [**Jupyter interface (researcher)**](jupyter_access.md) To perform intensive studies of the models, 
    model calibrations based on experimental data and 
    parametric studies the BMCS packages can be installed  
    locally. Included Jupyter notebooks provide the starting 
    point for modifications and processing of data.
    
- - [**Python (developer interface)**](python_access.md) Development of Python code supporting the 
+ - [**Python interface (developer)**](python_access.md) Development of Python code supporting the 
    Jupyter notebooks requires the developer setup with an access
    to the `github server` and a development environment. Currently
    `Pycharm` IDE is being used in the development 
    of BMCS tool suite.
 
- - [**Distribution (manager interface)**](distribution.md) 
+ - [**Packaging interface (administrator)**](distribution.md) 
    Build and upload packages to repositories 
    (pypi, conda)
