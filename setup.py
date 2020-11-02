@@ -10,7 +10,7 @@ import sys
 from shutil import rmtree
 
 from setuptools import find_packages, setup, Command
-from version import CURRENT_VERSION
+from bmcs_utils.version import __version__
 
 # Package meta-data.
 NAME = 'bmcs_utils'
@@ -19,7 +19,7 @@ URL = 'https://github.com/bmcs-group/bmcs_utils'
 EMAIL = 'rostislav.chudoba@rwt-aachen.de'
 AUTHOR = 'BMCS-Group'
 REQUIRES_PYTHON = '>=3.6.0'
-VERSION = CURRENT_VERSION
+VERSION = __version__
 
 # What packages are required for this module to be executed?
 REQUIRED = [

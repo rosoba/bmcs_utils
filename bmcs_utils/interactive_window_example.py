@@ -1,6 +1,9 @@
 
-from bmcs_utils.interactive_window import \
-    InteractiveModel, View, Item, InteractiveWindow
+from bmcs_utils.interactive_window import InteractiveWindow
+from bmcs_utils.interactive_model import InteractiveModel
+from bmcs_utils.view import View
+from bmcs_utils.item import Item
+
 
 from bmcs_utils.trait_types import \
     Float, FloatEditor

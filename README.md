@@ -10,7 +10,7 @@ three development phases:
 
 The list of questions and answers related to pa
 
-[Documentation](docs/index.md)
+[Documentation](docs/README.md)
 
 The notebook can be executed directly using the binder service. It takes a while for the repository image to build up.
 

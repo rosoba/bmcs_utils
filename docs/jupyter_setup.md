@@ -1,6 +1,36 @@
 
 ## Set up of the jupyter front-end
 
+## Jupyter in the `bmcs_env` environment
+
+To ensure that your jupyter notebook starts
+with an environment configured for bmcs packages
+activate the environment
+```
+conda activate bmcs_env
+```
+and install jupyter
+```
+conda install -c conda-forge jupyter
+```
+Install the tool generating the kernel for jupyter execution
+```
+conda install -c anaconda ipykernel
+```
+Construct a jupyter kernel using the `bmcs_env` environment
+```
+python -m ipykernel install --user --name bmcs_env
+```
+Execute
+```
+jupyter notebook
+```
+To have all the packages included in the `bmcs_env` 
+ensure that the kernel `bmcs_env` is active when running 
+the nobetook. The kernel can be set in the menu
+**Kernel -> Change kernel**
+
+
 ## Notebook extensions 
 It is recommended to use the notebook extensions that 
 include useful features, like

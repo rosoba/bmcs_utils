@@ -16,7 +16,9 @@ For linux use:
 
 sudo apt-get install git
 
-For windows usd:
+For windows use:
+
+@todo: please add  
 
 ## PyCharm
 
@@ -33,7 +35,7 @@ credentials. Clone the repository
 
 bmcs-group/bmcs_utils
 
-## Setup your environment 
+## Setup conda environment 
 
 In the root directory of this package, there is the environment.yml 
 file specifying all packages required for the execution and development
@@ -55,7 +57,12 @@ In all your bmcs pycharm projects define the Python interpreter from choose the
 the bmcs_env conda environment. This will set up all the other dependencies 
 correspondingly.
 
-## Setup the import path for bmcs packages
+If you wish to update your environment later you can issue
+```
+conda env update --file environment.yml --prune^C
+```
+
+## Setup Pycharm interpreter
 
 Since the environment definition file `environment.yml`
 contains the entry `-e .`
@@ -87,6 +94,8 @@ The current directory should be included in the list.
 This approach has the advantage that your workspace is 
 treated in the same way as packages comming from pypi 
 repository. 
+
+## Setup jupyter kernel
 
 # Uploading and releasing your package
 

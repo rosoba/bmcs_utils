@@ -1,0 +1,38 @@
+{% set name = "bmcs_utils" %}
+{% set version = "0.0.15a0" %}
+
+package:
+  name: "{{ name|lower }}"
+  version: "{{ version }}"
+
+source:
+  url: "https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz"
+  sha256: 0b3d050b0f040d22c43a0dec5a617f8631b858ed4a6a4122b48cd3e77a6837f5
+
+build:
+  number: 0
+  script: "{{ PYTHON }} -m pip install . -vv"
+
+requirements:
+  host:
+    - pip
+    - python
+  run:
+    - python
+
+test:
+  imports:
+    - bmcs_utils
+
+about:
+  home: "https://github.com/bmcs-group/bmcs_utils"
+  license: MIT
+  license_family: MIT
+  license_file: 
+  summary: "Suite of utilities for to implementation of bmcs_utils for brittle-matrix composites."
+  doc_url: 
+  dev_url: 
+
+extra:
+  recipe-maintainers:
+    - your-github-id-here
