@@ -32,12 +32,15 @@ class FloatRangeEditor(EditorFactory):
     low_name = tr.Str
     high_name = tr.Str
     n_steps = tr.Int(20)
+    n_steps_name = tr.Str
 
     def render(self):
         if self.low_name:
             self.low = getattr(self.model,self.low_name)
         if self.high_name:
             self.high = getattr(self.model,self.high_name)
+        if self.n_steps_name:
+            self.n_steps = getattr(self.model,self.n_steps_name)
         step = (self.high - self.low) / self.n_steps
         print('Float slider', self.value, self.low, self.high, step)
         return ipw.FloatSlider(
