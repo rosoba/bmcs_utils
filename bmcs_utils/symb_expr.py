@@ -36,7 +36,7 @@ class SymbExpr(tr.HasStrictTraits):
     # provided here
     model = tr.WeakRef
 
-    # @todo: check if the model can be taken from the refernce
+    # @todo [RC]: check if the model can be taken from the reference
     def get_model_params(self):
         return tuple([
             getattr(self.model,param_name) for param_name in self.symb_model_params
