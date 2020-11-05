@@ -11,3 +11,4 @@ from bmcs_utils.editors import \
     ButtonEditor
 
 # TODO [RC]: Define a protocol for the specification of assigned todos - nicknames
+# TODO [RC]: check if ipykernal installation is necessary
