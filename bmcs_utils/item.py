@@ -28,7 +28,7 @@ class Item(tr.HasTraits):
             editor = self.editor
         else:
             # create a new edior using the factory provided by the trait type
-            if trait.trait_type.editor_factory == None:
+            if trait.trait_type.editor_factory is None:
                 raise TypeError('no editor for %s with type %s' % (self.name,trait.trait_type) )
             editor = trait.trait_type.editor_factory()
         # use the editor supplied in the item defintion and set its attributes

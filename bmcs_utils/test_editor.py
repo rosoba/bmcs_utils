@@ -16,13 +16,14 @@ class ExampleModel(InteractiveModel):
     ipw_view = View(
         Item('a', editor=FloatRangeEditor(low=0, high=10)),
         Item('b', latex=r'\beta'),
-        Item('t', editor=FloatRangeEditor(low=0, high=1)),
-        Item('c'),
+        Item('t', latex=r'\theta', editor=FloatRangeEditor(low=0, high=1)),
+        Item('c', latex=r'\gamma'),
         simulator='run',
         reset_simulator='reset'
     )
 
     def run(self, update_progress=lambda t:t):
+        print('where are you')
         self.a += 1
         t_arr = np.linspace(0, 1, 10)
         for t in t_arr:

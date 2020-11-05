@@ -36,11 +36,11 @@ class FloatRangeEditor(EditorFactory):
 
     def render(self):
         if self.low_name:
-            self.low = getattr(self.model,self.low_name)
+            self.low = getattr(self.model, self.low_name)
         if self.high_name:
-            self.high = getattr(self.model,self.high_name)
+            self.high = getattr(self.model, self.high_name)
         if self.n_steps_name:
-            self.n_steps = getattr(self.model,self.n_steps_name)
+            self.n_steps = getattr(self.model, self.n_steps_name)
         step = (self.high - self.low) / self.n_steps
         print('Float slider', self.value, self.low, self.high, step)
         return ipw.FloatSlider(
@@ -50,7 +50,7 @@ class FloatRangeEditor(EditorFactory):
             step=step,
             tooltip=self.tooltip,
             continuous_update=False,
-            description=r'\(%s\)' % self.label
+            description=self.label
         )
 
 
@@ -65,30 +65,35 @@ class ProgressEditor(EditorFactory):
 
     def render(self):
         if self.min_name:
-            self.min = getattr(self.model,self.min_name)
+            self.min = getattr(self.model, self.min_name)
         if self.max_name:
-            self.max = getattr(self.model,self.max_name)
+            self.max = getattr(self.model, self.max_name)
         progress = ipw.FloatProgress(
             min=self.min, max=self.max,
-            value = self.value,
+            value=self.value,
             tooltip=self.tooltip
         )
+
         def notify_change(value):
             self.value = value
             progress.value = value
+
         self.trait.trait_type.add_notify(notify_change)
         return progress
+
 
 class ButtonEditor(EditorFactory):
     def render(self):
         button = ipw.Button(
             description=self.label,
             disabled=False,
-            button_style='', # 'success', 'info', 'warning', 'danger' or ''
+            button_style='',  # 'success', 'info', 'warning', 'danger' or ''
             tooltip=self.tooltip,
-            icon='check' # (FontAwesome names without the `fa-` prefix)
+            icon='check'  # (FontAwesome names without the `fa-` prefix)
         )
+
         def button_clicked(change):
             setattr(self.model, self.name, True)
+
         button.on_click(button_clicked)
         return button

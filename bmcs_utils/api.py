@@ -9,3 +9,5 @@ from bmcs_utils.trait_types import Int, Float, Bool, Button, Range, Progress
 from bmcs_utils.editors import \
     IntEditor, BoolEditor, FloatEditor, FloatRangeEditor, ProgressEditor, \
     ButtonEditor
+
+# TODO [RC]: Define a protocol for the specification of assigned todos - nicknames
