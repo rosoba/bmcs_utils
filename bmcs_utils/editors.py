@@ -9,21 +9,25 @@ class EditorFactory(tr.HasTraits):
     value = tr.Any
     trait = tr.Trait
     label = tr.Str
+    disabled = tr.Bool(False)
 
 
 class FloatEditor(EditorFactory):
     def render(self):
-        return ipw.FloatText(description=self.label, value=self.value, tooltip=self.tooltip)
+        return ipw.FloatText(description=self.label, value=self.value,
+                             tooltip=self.tooltip, disabled=self.disabled)
 
 
 class IntEditor(EditorFactory):
     def render(self):
-        return ipw.IntText(description=self.label, value=self.value, tooltip=self.tooltip)
+        return ipw.IntText(description=self.label, value=self.value,
+                           tooltip=self.tooltip, disabled=self.disabled)
 
 
 class BoolEditor(EditorFactory):
     def render(self):
-        return ipw.Checkbox(description=self.label, value=self.value, tooltip=self.tooltip)
+        return ipw.Checkbox(description=self.label, value=self.value,
+                            tooltip=self.tooltip, disabled=self.disabled)
 
 
 class FloatRangeEditor(EditorFactory):
@@ -42,7 +46,6 @@ class FloatRangeEditor(EditorFactory):
         if self.n_steps_name:
             self.n_steps = getattr(self.model, self.n_steps_name)
         step = (self.high - self.low) / self.n_steps
-        print('Float slider', self.value, self.low, self.high, step)
         return ipw.FloatSlider(
             value=self.value,
             min=self.low,
@@ -50,7 +53,8 @@ class FloatRangeEditor(EditorFactory):
             step=step,
             tooltip=self.tooltip,
             continuous_update=False,
-            description=self.label
+            description=self.label,
+            disabled=self.disabled
         )
 
 

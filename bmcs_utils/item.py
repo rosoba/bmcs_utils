@@ -6,7 +6,7 @@ class Item(tr.HasTraits):
     """
     name = tr.Str
     latex = tr.Str
-    minmax = tr.Tuple
+    readonly = tr.Bool
 
     editor = None
     '''Overload the editor defined in the trait type'''
@@ -42,4 +42,5 @@ class Item(tr.HasTraits):
         editor.value = value
         editor.trait = trait
         editor.model = model
+        editor.disabled = self.readonly
         return editor

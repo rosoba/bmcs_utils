@@ -15,7 +15,7 @@ class ExampleModel(InteractiveModel):
 
     ipw_view = View(
         Item('a', editor=FloatRangeEditor(low=0, high=10)),
-        Item('b', latex=r'\beta'),
+        Item('b', latex=r'\beta', readonly=True),
         Item('t', latex=r'\theta', editor=FloatRangeEditor(low=0, high=1)),
         Item('c', latex=r'\gamma'),
         simulator='run',
