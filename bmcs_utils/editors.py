@@ -40,11 +40,11 @@ class FloatRangeEditor(EditorFactory):
 
     def render(self):
         if self.low_name:
-            self.low = getattr(self.model, self.low_name)
+            self.low = getattr(self.model, str(self.low_name))
         if self.high_name:
-            self.high = getattr(self.model, self.high_name)
+            self.high = getattr(self.model, str(self.high_name))
         if self.n_steps_name:
-            self.n_steps = getattr(self.model, self.n_steps_name)
+            self.n_steps = getattr(self.model, str(self.n_steps_name))
         step = (self.high - self.low) / self.n_steps
         return ipw.FloatSlider(
             value=self.value,

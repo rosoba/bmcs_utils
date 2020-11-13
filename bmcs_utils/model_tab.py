@@ -1,7 +1,7 @@
-
 import traits.api as tr
 from bmcs_utils.i_interactive_model import IInteractiveModel
 import ipywidgets as ipw
+
 
 class ModelTab(tr.HasTraits):
     '''Base class for tabs within an interaction window.'''
@@ -16,35 +16,6 @@ class ModelTab(tr.HasTraits):
         self.interactor = interactor
 
     n_steps = tr.Int(20)
-
-    # @todo: an alternative implementation - analogy to traitsui.View
-    def get_editors(self):
-        ipw_view = self.model.ipw_view
-        item_names = ipw_view.item_names
-        items = ipw_view.content
-        # The traits named in ipw_view are fetched from the model
-        # one could directly call `traits` - but then also transient
-        # traits like properties would be be accessed. This would disable
-        # lazy evaluation of properties.
-        # Using the self.traits(transient=is_none) does not work either
-        # as then no Buttons could be used - they are also transient.
-        # The result is a three step reteirval
-        # 1) - use trait_get to obtain the values, transient values are empty
-        values = [self.model.trait_get(name) for name in item_names]
-        # 2) - convert the list of dictionaries to a single dictionary
-        val_dict = {k: v for d in values for k, v in d.items()}
-        # 3) - construct a list ordered according to `item_names` with
-        #      values of transient traits set to none
-        values_ = [val_dict.get(name, None) for name in item_names]
-        # 4) - order the corresponding traits according item_names
-        traits_ = [self.model.trait(name) for name in item_names]
-        # construct a dictionary of editors that can be rendered
-        editors = {
-            item.name: item.get_editor(value_, trait_, self.model)
-            for (item, trait_, value_) in
-            zip(items, traits_, values_)
-        }
-        return editors
 
     freeze_editors = tr.Bool(False)
 
@@ -72,49 +43,20 @@ class ModelTab(tr.HasTraits):
         self.freeze_editors = False
         # ipw_editor.observe(self.ipw_editor_changed, 'value')
 
+    def get_editors(self, model):
+        return self.model.ipw_view.get_editors(self.model)
+
     def widget_layout(self):
 
         vlist = []
 
         ipw_view = self.model.ipw_view
         if ipw_view.simulator:
-
-            progress_bar_widgets = []
-            run_sim = getattr(self.model, ipw_view.simulator)
-            button = ipw.Button(description=ipw_view.simulator,
-                                tooltip='Run the simulation with a progress bar',
-                                layout=ipw.Layout(width='20%', height='30px'))
-            button.style.button_color = 'darkgray'
-
-            progress_bar = ipw.FloatProgress(min=0, max=1,
-                                             layout=ipw.Layout(width='80%', height='30px'))
-            def update_progress(value):
-                progress_bar.value = value
-            def button_clicked(change):
-                run_sim(update_progress)
-                self.interactor.update_plot(self.index)
-            button.on_click(button_clicked)
-
-            progress_bar_widgets.append(button)
-            progress_bar_widgets.append(progress_bar)
-            # define the reset action
-            if ipw_view.reset_simulator:
-                reset_sim = getattr(self.model, ipw_view.reset_simulator)
-                reset_button = ipw.Button(description=ipw_view.reset_simulator,
-                                    tooltip='Reset the simulation',
-                                    layout=ipw.Layout(width='20%', height='30px'))
-                reset_button.style.button_color = 'darkgray'
-                def reset_button_clicked(change):
-                    reset_sim()
-                    self.interactor.update_plot(self.index)
-                    progress_bar.value = 0
-                reset_button.on_click(reset_button_clicked)
-                progress_bar_widgets.append(reset_button)
-
+            progress_bar_widgets = ipw_view.get_pb_widgets(self.model, self)
             progress_box = ipw.HBox(progress_bar_widgets, layout=ipw.Layout(padding='5px'))
             vlist.append(progress_box)
 
-        editors = self.get_editors()
+        editors = self.get_editors(self.model)
         self.ipw_editors = {}
 
         for name, editor in editors.items():
@@ -124,7 +66,7 @@ class ModelTab(tr.HasTraits):
             self.ipw_editors[name] = ipw_editor
             editor.model.observe(self.notify_change, name)
 
-        # Originally, the interactive_ouput widget was used
+        # Originally, the interactive_output widget was used
         # here. But in this way, the update method was called
         # earlier than the tab change observer of the interactor
         # This caused problems if axes object did not correspond
@@ -132,11 +74,10 @@ class ModelTab(tr.HasTraits):
         # slider observer is now used , augmented with the trait name.
         # out = ipw.interactive_output(self.update, sliders);
 
-        layout = ipw.Layout(grid_template_columns='1fr 1fr', padding='6px', width='100%')
-        ipw_view = self.model.ipw_view
         item_names = ipw_view.item_names
-        item_editors_list = [self.ipw_editors[name] for name in item_names]
-        grid = ipw.GridBox(item_editors_list, layout=layout)
+        ipw_editors_list = [self.ipw_editors[name] for name in item_names]
+        layout = ipw.Layout(grid_template_columns='1fr 1fr', padding='6px', width='100%')
+        grid = ipw.GridBox(ipw_editors_list, layout=layout)
 
         vlist.append(grid)
         frame = ipw.VBox(vlist)
