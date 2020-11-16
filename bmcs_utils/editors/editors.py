@@ -10,6 +10,7 @@ class EditorFactory(tr.HasTraits):
     trait = tr.Trait
     label = tr.Str
     disabled = tr.Bool(False)
+    ui_pane = tr.WeakRef
 
 
 class FloatEditor(EditorFactory):
@@ -56,34 +57,6 @@ class FloatRangeEditor(EditorFactory):
             description=self.label,
             disabled=self.disabled
         )
-
-
-class ProgressEditor(EditorFactory):
-    """
-    Progress bar running between 0 and 1 by default
-    """
-    min = tr.Float(0)
-    max = tr.Float(1)
-    min_name = tr.Str
-    max_name = tr.Str
-
-    def render(self):
-        if self.min_name:
-            self.min = getattr(self.model, self.min_name)
-        if self.max_name:
-            self.max = getattr(self.model, self.max_name)
-        progress = ipw.FloatProgress(
-            min=self.min, max=self.max,
-            value=self.value,
-            tooltip=self.tooltip
-        )
-
-        def notify_change(value):
-            self.value = value
-            progress.value = value
-
-        self.trait.trait_type.add_notify(notify_change)
-        return progress
 
 
 class ButtonEditor(EditorFactory):

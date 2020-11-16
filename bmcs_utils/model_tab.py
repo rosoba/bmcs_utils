@@ -44,17 +44,11 @@ class ModelTab(tr.HasTraits):
         # ipw_editor.observe(self.ipw_editor_changed, 'value')
 
     def get_editors(self, model):
-        return self.model.ipw_view.get_editors(self.model)
+        return self.model.ipw_view.get_editors(self.model, self)
 
     def widget_layout(self):
 
         vlist = []
-
-        ipw_view = self.model.ipw_view
-        if ipw_view.simulator:
-            progress_bar_widgets = ipw_view.get_pb_widgets(self.model, self)
-            progress_box = ipw.HBox(progress_bar_widgets, layout=ipw.Layout(padding='5px'))
-            vlist.append(progress_box)
 
         editors = self.get_editors(self.model)
         self.ipw_editors = {}
@@ -74,6 +68,7 @@ class ModelTab(tr.HasTraits):
         # slider observer is now used , augmented with the trait name.
         # out = ipw.interactive_output(self.update, sliders);
 
+        ipw_view = self.model.ipw_view
         item_names = ipw_view.item_names
         ipw_editors_list = [self.ipw_editors[name] for name in item_names]
         layout = ipw.Layout(grid_template_columns='1fr 1fr', padding='6px', width='100%')
