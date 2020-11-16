@@ -25,10 +25,10 @@ class ProgressEditor(EditorFactory):
     """
     Progress bar running between 0 and 1 by default
     """
-    reset_simulator = tr.Str
-    run_simulator = tr.Str
-    interrupt_simulator = tr.Str
-    time_variable = tr.Str
+    run_method = tr.Str
+    reset_method = tr.Str
+    interrupt_var = tr.Str
+    time_var = tr.Str
     time_max = tr.Str
     refresh_freq = tr.Float(2)
 
@@ -44,7 +44,7 @@ class ProgressEditor(EditorFactory):
         self._running = True
         try:
             # start the calculation
-            run_fn = getattr(model, str(self.run_simulator))
+            run_fn = getattr(model, str(self.run_method))
             run_fn()
 
         except Exception as e:
@@ -56,13 +56,13 @@ class ProgressEditor(EditorFactory):
     def watch(self, model):
         r"""Watch the loop and update the progress bar
         """
-        t = getattr(self.model, self.time_variable)
+        t = getattr(self.model, self.time_var)
         t_max = getattr(self.model, self.time_max)
         while self._running: # and t <= t_max:
-            if (self.interrupt_simulator is not None) and getattr(self.model, self.interrupt_simulator):
+            if (self.interrupt_var is not None) and getattr(self.model, self.interrupt_var):
                 break
             time.sleep(1 / self.refresh_freq)
-            t = getattr(self.model, self.time_variable)
+            t = getattr(self.model, self.time_var)
             self.pb.value = t
             self.ui_pane.interactor.update_plot(self.ui_pane.index)
         self.run_button.style.button_color = 'lightgray'
@@ -106,15 +106,15 @@ class ProgressEditor(EditorFactory):
             self.interrupt_button.style.button_color = 'gray'
             t_max = getattr(self.model, self.time_max)
             self.pb.max = t_max
-            if self.interrupt_simulator:
-                setattr(self.model, self.interrupt_simulator, False)
+            if self.interrupt_var:
+                setattr(self.model, self.interrupt_var, False)
             self.run_thread(self.model)
 
         self.run_button.on_click(run_in_thread)
         progress_bar_widgets.append(self.run_button)
         progress_bar_widgets.append(self.pb)
         # define the reset action
-        if not(self.interrupt_simulator is None):
+        if not(self.interrupt_var is None):
             self.interrupt_button = ipw.Button(icon='fa-pause',
                                       tooltip='Interrupt',
                                       layout=ipw.Layout(width='42px', height='24px'))
@@ -123,15 +123,15 @@ class ProgressEditor(EditorFactory):
                 if not self._running:
                     return
                 self._running = False
-                setattr(self.model, self.interrupt_simulator, True)
+                setattr(self.model, self.interrupt_var, True)
                 self.run_button.style.button_color = 'gray'
                 self.reset_button.style.button_color = 'gray'
                 self.interrupt_button.style.button_color = 'lightgray'
             self.interrupt_button.on_click(interrupt_button_clicked)
             progress_bar_widgets.append(self.interrupt_button)
 
-        if self.reset_simulator:
-            reset_sim = getattr(self.model, self.reset_simulator)
+        if self.reset_method:
+            reset_sim = getattr(self.model, self.reset_method)
             self.reset_button = ipw.Button(#description='Reset',
                                       icon='fa-fast-backward',
                                       tooltip='Reset',

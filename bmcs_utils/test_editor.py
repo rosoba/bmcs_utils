@@ -18,10 +18,10 @@ class ExampleModel(InteractiveModel):
     sim_stop = Bool(False)
 
     ipw_view = View(
-        Item('t', editor=ProgressEditor(run_simulator='run',
-                                        reset_simulator='reset',
-                                        interrupt_simulator='sim_stop',
-                                        time_variable='t',
+        Item('t', editor=ProgressEditor(run_method='run',
+                                        reset_method='reset',
+                                        interrupt_var='sim_stop',
+                                        time_var='t',
                                         time_max='t_max',
                                         )
              ),
