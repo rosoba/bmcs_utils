@@ -20,9 +20,11 @@ Matplotlib enhanced with interactive plotting using ipywidgets.
 import ipywidgets as ipw
 import traits.api as tr
 import matplotlib.pylab as plt
+import k3d
 
 from bmcs_utils.model_tab import ModelTab
 from bmcs_utils.i_interactive_model import IInteractiveModel
+
 
 class InteractiveWindow(tr.HasTraits):
     '''Container class synchronizing the interactionjup elements with plotting area.
@@ -44,12 +46,21 @@ class InteractiveWindow(tr.HasTraits):
             for i, model in enumerate(models)
         ]
         self.output = ipw.Output()
-        with self.output:
-            f = plt.figure(figsize=self.figsize, constrained_layout=True)
-        f.canvas.toolbar_position = 'top'
-        f.canvas.header_visible = False
-        self.fig = f
-        self.axes = self.models[0].subplots(self.fig)
+
+        self.plot_backend = self.models[0].plot_backend
+        if self.plot_backend == 'mpl':
+            with self.output:
+                f = plt.figure(figsize=self.figsize, constrained_layout=True)
+            f.canvas.toolbar_position = 'top'
+            f.canvas.header_visible = False
+            self.fig = f
+            self.axes = self.models[0].subplots(self.fig)
+        elif self.plot_backend == 'k3d':
+            self.k3d_plot = k3d.plot()
+            self.output.append_display_data(self.k3d_plot)
+            self.models[0].subplots(k3d.plot())
+        else:
+            raise NameError(self.plot_backend + ' is not a valid plot_backend!')
 
     def __del__(self):
         plt.close(self.fig)
@@ -73,16 +84,26 @@ class InteractiveWindow(tr.HasTraits):
         self.update_plot(index)
 
     def update_plot(self, index):
-        '''update the visualization with updated bmcs_utils'''
-        self.fig.clf()
-        self.axes = self.ipw_model_tabs[index].subplots(self.fig)
-        _axes = self.axes
-        if not hasattr(_axes, '__iter__'):
-            _axes = [_axes]
-        for ax in _axes:
-            ax.clear()
-        self.ipw_model_tabs[index].update_plot(self.axes)
-        if len(self.tab.children) > index:
-            self.tab.selected_index = index
-        self.fig.canvas.draw()
+        if self.plot_backend == 'mpl':
+            """update the visualization with updated bmcs_utils"""
+            self.fig.clf()
+            self.axes = self.ipw_model_tabs[index].subplots(self.fig)
+            _axes = self.axes
+            if not hasattr(_axes, '__iter__'):
+                _axes = [_axes]
+            for ax in _axes:
+                ax.clear()
+            self.ipw_model_tabs[index].update_plot(self.axes)
+            if len(self.tab.children) > index:
+                self.tab.selected_index = index
+            self.fig.canvas.draw()
+        elif self.plot_backend == 'k3d':
+            # TODO: why the first loop is not removing all the objects! clean this!
+            for obj in self.k3d_plot.objects:
+                self.k3d_plot -= obj
+            for obj in self.k3d_plot.objects:
+                self.k3d_plot -= obj
+            self.ipw_model_tabs[index].update_plot(self.k3d_plot)
+        else:
+            raise NameError(self.plot_backend + ' is not a valid plot_backend!')
 
