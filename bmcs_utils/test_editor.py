@@ -3,9 +3,31 @@ from bmcs_utils.trait_types import \
 from bmcs_utils.interactive_model import InteractiveModel
 from bmcs_utils.item import Item
 from bmcs_utils.view import View
+from bmcs_utils.editors import SelectionEditor
 import numpy as np
-from traits.api import Event
 import time
+import traits.api as tr
+
+class CSShape(InteractiveModel):
+
+    def update_plot(self, axes):
+        pass
+
+class Rectangle(CSShape):
+    H = Float(10, desc=r'first material parameter')
+    B = Float(5, desc='input parameter')
+
+    ipw_view = View(
+        Item('H'),
+        Item('B')
+    )
+
+class Circle(CSShape):
+    R = Float(10, desc=r'first material parameter')
+
+    ipw_view = View(
+        Item('R'),
+    )
 
 class ExampleModel(InteractiveModel):
     name = 'Example'
@@ -17,6 +39,19 @@ class ExampleModel(InteractiveModel):
     t_max = Float(10)
     sim_stop = Bool(False)
 
+    options = tr.Dict(
+        {
+            'rectangle': Rectangle(),
+            'circle': Circle()
+        }
+    )
+
+    shape = tr.Instance(CSShape)
+    def _shape_default(self):
+        return self.options['rectangle']
+
+#    shape = tr.Either(Rectangle,Circle)
+
     ipw_view = View(
         Item('t', editor=ProgressEditor(run_method='run',
                                         reset_method='reset',
@@ -26,9 +61,10 @@ class ExampleModel(InteractiveModel):
                                         )
              ),
         Item('a', editor=FloatRangeEditor(low=0, high=10)),
+        Item('shape', editor=SelectionEditor(options_trait='options')),
         Item('b', latex=r'\beta', readonly=True),
         Item('t_max', latex=r'\theta'),
-        Item('c', latex=r'\gamma'),
+        Item('c', latex=r'\gamma')
     )
 
     def run(self):

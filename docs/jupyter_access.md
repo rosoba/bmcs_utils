@@ -51,20 +51,18 @@ To be able to import them, the runtime configuration in Jupyter and Pycharm
 projects have to be configured with this environment.
 
 1) install jupyter
-    ```
+    ```shell script
     conda install -c conda-forge jupyter
     ```
-
-1) install ipykernel 
-    ```
-    conda install -c conda-forge ipykernel
-    ```
-2) create a kernel for the new environment
-
-    ```
-    python -m ipykernel install --user --name bmcs_env
-    ```
-3) start the jupyter notebook, navigate to
+   Since the `bmcs_env` environment is active, 
+   jupyter kernel is installed in this environment and, thus, 
+   has all `bmcs` packages within its import path. 
+   
+2) start the jupyter notebook, by issuing
+   ```shell script
+   jupyter notebook
+   ```
+   navigate to
    the menu `Kernel -> Change kernel` and select 
    the `bmcs_env` kernel as the active kernel. The 
    kernel name will be displaed at the top right corner

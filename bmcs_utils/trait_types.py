@@ -1,8 +1,7 @@
 import traits.api as tr
 from bmcs_utils.editors import \
     IntEditor, BoolEditor, FloatEditor, FloatRangeEditor, \
-    ProgressEditor, ButtonEditor
-
+    ProgressEditor, ButtonEditor, SelectionEditor
 
 # Specialized traits
 class Int(tr.BaseInt):
@@ -21,6 +20,7 @@ class Range(tr.BaseRange):
     editor_factory = FloatRangeEditor
 
 
+### deprecated -- delete
 class Progress(tr.BaseFloat):
     editor_factory = ProgressEditor
 
@@ -34,6 +34,11 @@ class Progress(tr.BaseFloat):
         for callback in self.notify:
             callback(value)
 
-
 class Button(tr.Button):
     editor_factory = ButtonEditor
+
+class Selection(tr.TraitType):
+    editor_factor = SelectionEditor
+
+    def init(self):
+        print(self._metadata)
