@@ -38,6 +38,7 @@ class FloatRangeEditor(EditorFactory):
     high_name = tr.Str
     n_steps = tr.Int(20)
     n_steps_name = tr.Str
+    continuous_update = tr.Bool(False)
 
     def render(self):
         if self.low_name:
@@ -53,7 +54,7 @@ class FloatRangeEditor(EditorFactory):
             max=self.high,
             step=step,
             tooltip=self.tooltip,
-            continuous_update=False,
+            continuous_update=self.continuous_update,
             description=self.label,
             disabled=self.disabled
         )
