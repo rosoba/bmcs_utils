@@ -33,7 +33,10 @@ class Item(tr.HasTraits):
             editor = trait.trait_type.editor_factory()
         # use the editor supplied in the item defintion and set its attributes
         editor.name = self.name
-        editor.label = self.latex_str
+        # TODO [RC]: just for info, I added this if because I wanted to put a label for a button by assigning the
+        #  'label' but this was overwriting my desired label.
+        if self.latex:
+            editor.label = self.latex_str
         desc = trait.desc
         if desc:
             editor.tooltip = desc

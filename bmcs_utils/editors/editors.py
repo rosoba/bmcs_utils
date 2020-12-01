@@ -61,13 +61,15 @@ class FloatRangeEditor(EditorFactory):
 
 
 class ButtonEditor(EditorFactory):
+    icon = tr.Str('check')
+
     def render(self):
         button = ipw.Button(
             description=self.label,
             disabled=False,
             button_style='',  # 'success', 'info', 'warning', 'danger' or ''
             tooltip=self.tooltip,
-            icon='check'  # (FontAwesome names without the `fa-` prefix)
+            icon=self.icon  # (FontAwesome names without the `fa-` prefix)
         )
 
         def button_clicked(change):
