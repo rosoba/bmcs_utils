@@ -81,7 +81,16 @@ class InteractiveWindow(tr.HasTraits):
 
     def change_tab(self, change=None):
         index = self.tab.selected_index
-        self.update_plot(index)
+        # clean k3d
+        if self.plot_backend == 'mpl':
+            self.update_plot(index)
+        if self.plot_backend == 'k3d':
+            # TODO: why the first loop is not removing all the objects! clean this!
+            for obj in self.k3d_plot.objects:
+                self.k3d_plot -= obj
+            for obj in self.k3d_plot.objects:
+                self.k3d_plot -= obj
+            self.ipw_model_tabs[index].plot_k3d(self.k3d_plot)
 
     def update_plot(self, index):
         if self.plot_backend == 'mpl':
@@ -99,10 +108,6 @@ class InteractiveWindow(tr.HasTraits):
             self.fig.canvas.draw()
         elif self.plot_backend == 'k3d':
             # TODO: why the first loop is not removing all the objects! clean this!
-            for obj in self.k3d_plot.objects:
-                self.k3d_plot -= obj
-            for obj in self.k3d_plot.objects:
-                self.k3d_plot -= obj
             self.ipw_model_tabs[index].update_plot(self.k3d_plot)
         else:
             raise NameError(self.plot_backend + ' is not a valid plot_backend!')

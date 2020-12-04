@@ -78,6 +78,9 @@ class ModelTab(tr.HasTraits):
         frame = ipw.VBox(vlist)
         return frame
 
+    def plot_k3d(self, k3d_plot):
+        self.model.plot_k3d(k3d_plot)
+
     def subplots(self, fig):
         return self.model.subplots(fig)
 

@@ -8,6 +8,7 @@ dependencies:
 - matplotlib-base
 - numpy
 - sympy
+- k3d
 - ipywidgets
 - ipympl
 - pip
