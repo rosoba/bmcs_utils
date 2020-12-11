@@ -22,7 +22,7 @@ conda env create -f environment.yml
 ```
 If you wish to update your environment later you can issue
 ```
-conda env update -f environment.yml --prune^C
+conda env update -f environment.yml --prune
 ```
 
 ## Activate `bmcs_env` environment 
