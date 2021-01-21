@@ -1,7 +1,6 @@
 import traits.api as tr
 import ipywidgets as ipw
 
-
 class EditorFactory(tr.HasTraits):
     name = tr.Str
     model = tr.WeakRef
@@ -39,6 +38,8 @@ class FloatRangeEditor(EditorFactory):
     n_steps = tr.Int(20)
     n_steps_name = tr.Str
     continuous_update = tr.Bool(False)
+    readout = tr.Bool(True)
+    readout_format = tr.Str
 
     def render(self):
         if self.low_name:
@@ -48,6 +49,11 @@ class FloatRangeEditor(EditorFactory):
         if self.n_steps_name:
             self.n_steps = getattr(self.model, str(self.n_steps_name))
         step = (self.high - self.low) / self.n_steps
+
+        if not self.readout_format:
+            self.readout_format = self.get_readout_format(self.low, self.high, self.n_steps)
+
+        # There's a bug in FloatSlider for very small step, see https://github.com/jupyter-widgets/ipywidgets/issues/259
         return ipw.FloatSlider(
             value=self.value,
             min=self.low,
@@ -56,8 +62,26 @@ class FloatRangeEditor(EditorFactory):
             tooltip=self.tooltip,
             continuous_update=self.continuous_update,
             description=self.label,
-            disabled=self.disabled
+            disabled=self.disabled,
+            readout=self.readout,
+            readout_format=self.readout_format
         )
+
+    def get_readout_format(self, low, high, n_steps):
+        magnitude_n_steps = self.get_order_of_magnitude(n_steps)
+        magnitude_low = self.get_order_of_magnitude(low)
+        magnitude_high = self.get_order_of_magnitude(high)
+        min_magnitude = min(magnitude_low, magnitude_high)
+        if min_magnitude >= 0:
+            req_decimals = 2
+        else:
+            req_decimals = abs(min_magnitude) + magnitude_n_steps
+        return '.' + str(req_decimals) + 'f'
+
+    def get_order_of_magnitude(self, num):
+        sci_num = '{:.1e}'.format(num)
+        sci_num_suffix = sci_num.split('e')[1]
+        return int(sci_num_suffix)
 
 
 class ButtonEditor(EditorFactory):
