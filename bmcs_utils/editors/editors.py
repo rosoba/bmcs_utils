@@ -57,6 +57,7 @@ class FloatRangeEditor(EditorFactory):
 
         # There's a bug in FloatSlider for very small step, see https://github.com/jupyter-widgets/ipywidgets/issues/259
         # it will be fixed in ipywidgets v8.0.0, but until then, the following fix will be used
+        # with this implementation, entering the number manually in the readout will not work
         values = np.linspace(self.low, self.high, int(self.n_steps))
         values = np.round(values, round_value)
         return ipw.SelectionSlider(
