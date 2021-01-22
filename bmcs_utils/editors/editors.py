@@ -1,5 +1,6 @@
 import traits.api as tr
 import ipywidgets as ipw
+import numpy as np
 
 class EditorFactory(tr.HasTraits):
     name = tr.Str
@@ -50,24 +51,38 @@ class FloatRangeEditor(EditorFactory):
             self.n_steps = getattr(self.model, str(self.n_steps_name))
         step = (self.high - self.low) / self.n_steps
 
+        round_value = self.get_round_value(self.low, self.high, self.n_steps)
         if not self.readout_format:
-            self.readout_format = self.get_readout_format(self.low, self.high, self.n_steps)
+            self.readout_format = '.' + str(round_value) + 'f'
 
         # There's a bug in FloatSlider for very small step, see https://github.com/jupyter-widgets/ipywidgets/issues/259
-        return ipw.FloatSlider(
+        # it will be fixed in ipywidgets v8.0.0, but until then, the following fix will be used
+        values = np.linspace(self.low, self.high, int(self.n_steps))
+        values = np.round(values, round_value)
+        return ipw.SelectionSlider(
+            options=values,
             value=self.value,
-            min=self.low,
-            max=self.high,
-            step=step,
             tooltip=self.tooltip,
             continuous_update=self.continuous_update,
             description=self.label,
             disabled=self.disabled,
             readout=self.readout,
-            readout_format=self.readout_format
         )
 
-    def get_readout_format(self, low, high, n_steps):
+        # return ipw.FloatSlider(
+        #     value=self.value,
+        #     min=self.low,
+        #     max=self.high,
+        #     step=step,
+        #     tooltip=self.tooltip,
+        #     continuous_update=self.continuous_update,
+        #     description=self.label,
+        #     disabled=self.disabled,
+        #     readout=self.readout,
+        #     readout_format=self.readout_format
+        # )
+
+    def get_round_value(self, low, high, n_steps):
         magnitude_n_steps = self.get_order_of_magnitude(n_steps)
         magnitude_low = self.get_order_of_magnitude(low)
         magnitude_high = self.get_order_of_magnitude(high)
@@ -76,7 +91,7 @@ class FloatRangeEditor(EditorFactory):
             req_decimals = 2
         else:
             req_decimals = abs(min_magnitude) + magnitude_n_steps
-        return '.' + str(req_decimals) + 'f'
+        return req_decimals
 
     def get_order_of_magnitude(self, num):
         sci_num = '{:.1e}'.format(num)
