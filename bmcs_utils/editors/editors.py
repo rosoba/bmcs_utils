@@ -51,7 +51,7 @@ class FloatRangeEditor(EditorFactory):
             self.n_steps = getattr(self.model, str(self.n_steps_name))
         step = (self.high - self.low) / self.n_steps
 
-        round_value = self.get_round_value(self.low, self.high, self.n_steps)
+        round_value = self._get_round_value(self.low, self.high, self.n_steps)
         if not self.readout_format:
             self.readout_format = '.' + str(round_value) + 'f'
 
@@ -60,6 +60,9 @@ class FloatRangeEditor(EditorFactory):
         # with this implementation, entering the number manually in the readout will not work
         values = np.linspace(self.low, self.high, int(self.n_steps))
         values = np.round(values, round_value)
+
+        # This is for SelectionSlider because 'value' must match exactly one of values array
+        self.value = self._find_nearest(values, self.value)
         return ipw.SelectionSlider(
             options=values,
             value=self.value,
@@ -83,10 +86,15 @@ class FloatRangeEditor(EditorFactory):
         #     readout_format=self.readout_format
         # )
 
-    def get_round_value(self, low, high, n_steps):
-        magnitude_n_steps = self.get_order_of_magnitude(n_steps)
-        magnitude_low = self.get_order_of_magnitude(low)
-        magnitude_high = self.get_order_of_magnitude(high)
+    def _find_nearest(self, array, value):
+        array = np.asarray(array)
+        idx = (np.abs(array - value)).argmin()
+        return array[idx]
+
+    def _get_round_value(self, low, high, n_steps):
+        magnitude_n_steps = self._get_order_of_magnitude(n_steps)
+        magnitude_low = self._get_order_of_magnitude(low)
+        magnitude_high = self._get_order_of_magnitude(high)
         min_magnitude = min(magnitude_low, magnitude_high)
         if min_magnitude >= 0:
             req_decimals = 2
@@ -94,7 +102,7 @@ class FloatRangeEditor(EditorFactory):
             req_decimals = abs(min_magnitude) + magnitude_n_steps
         return req_decimals
 
-    def get_order_of_magnitude(self, num):
+    def _get_order_of_magnitude(self, num):
         sci_num = '{:.1e}'.format(num)
         sci_num_suffix = sci_num.split('e')[1]
         return int(sci_num_suffix)
