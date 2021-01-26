@@ -11,14 +11,6 @@ class Item(tr.HasTraits):
     editor = None
     '''Overload the editor defined in the trait type'''
 
-    latex_str = tr.Property
-
-    def _get_latex_str(self):
-        if self.latex:
-            return r'\(%s\)' % self.latex
-        else:
-            return self.name
-
     def __init__(self, name, **traits):
         self.name = name
         tr.HasTraits.__init__(self, **traits)
@@ -33,10 +25,13 @@ class Item(tr.HasTraits):
             editor = trait.trait_type.editor_factory()
         # use the editor supplied in the item defintion and set its attributes
         editor.name = self.name
-        # TODO [RC]: just for info, I added this if because I wanted to put a label for a button by assigning the
-        #  'label' but this was overwriting my desired label.
-        if self.latex:
-            editor.label = self.latex_str
+
+        if not editor.label:
+            if self.latex:
+                editor.label = r'\(%s\)' % self.latex
+            else:
+                editor.label = self.name
+
         desc = trait.desc
         if desc:
             editor.tooltip = desc

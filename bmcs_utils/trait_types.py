@@ -1,7 +1,7 @@
 import traits.api as tr
 from bmcs_utils.editors import \
     IntEditor, BoolEditor, FloatEditor, FloatRangeEditor, \
-    ProgressEditor, ButtonEditor, SelectionEditor
+    ProgressEditor, ButtonEditor, SelectionEditor, ArrayEditor
 
 # Specialized traits
 class Int(tr.BaseInt):
@@ -18,6 +18,14 @@ class Float(tr.BaseFloat):
 
 class Range(tr.BaseRange):
     editor_factory = FloatRangeEditor
+
+
+# class Enum(tr.BaseEnum):
+#     editor_factory = FloatRangeEditor
+
+
+class Array(tr.Array):
+    editor_factory = ArrayEditor
 
 
 ### deprecated -- delete

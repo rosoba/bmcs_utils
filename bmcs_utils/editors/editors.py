@@ -14,14 +14,14 @@ class EditorFactory(tr.HasTraits):
 
 
 class FloatEditor(EditorFactory):
-    step = tr.Float
+    step = tr.Float(1.)
     def render(self):
         return ipw.FloatText(description=self.label, value=self.value, step=self.step,
                              tooltip=self.tooltip, disabled=self.disabled)
 
 
 class IntEditor(EditorFactory):
-    step = tr.Float
+    step = tr.Int(1)
     def render(self):
         return ipw.IntText(description=self.label, value=self.value, step=self.step,
                            tooltip=self.tooltip, disabled=self.disabled)
@@ -127,3 +127,28 @@ class ButtonEditor(EditorFactory):
 
         button.on_click(button_clicked)
         return button
+
+
+class ArrayEditor(EditorFactory):
+    step = tr.Float(1)
+
+    def render(self):
+        array_values_widgets = [ipw.FloatText(value=value, step=self.step) for value in self.value]
+        accordion = ipw.Accordion(children=[ipw.VBox(array_values_widgets)], disabled=self.disabled)
+        accordion.set_title(0, self.label)
+        return accordion
+
+
+# class EnumEditor(EditorFactory):
+#     options_tuple_list = tr.List
+#
+#     def render(self):
+#         # if self.options_tuple_list:
+#         #     self.options_tuple_list = getattr(self.model, str(self.options_tuple_list))
+#
+#         return ipw.Dropdown(
+#             description=self.label,
+#             options=self.options_tuple_list, #[('One', 1), ('Two', 2), ('Three', 3)],
+#             value=self.value,
+#             tooltip=self.tooltip,
+#         )
