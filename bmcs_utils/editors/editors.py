@@ -14,14 +14,16 @@ class EditorFactory(tr.HasTraits):
 
 
 class FloatEditor(EditorFactory):
+    step = tr.Float
     def render(self):
-        return ipw.FloatText(description=self.label, value=self.value,
+        return ipw.FloatText(description=self.label, value=self.value, step=self.step,
                              tooltip=self.tooltip, disabled=self.disabled)
 
 
 class IntEditor(EditorFactory):
+    step = tr.Float
     def render(self):
-        return ipw.IntText(description=self.label, value=self.value,
+        return ipw.IntText(description=self.label, value=self.value, step=self.step,
                            tooltip=self.tooltip, disabled=self.disabled)
 
 
