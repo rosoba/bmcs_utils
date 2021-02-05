@@ -9,6 +9,7 @@ from bmcs_utils.trait_types import Int, Float, Bool, Button, Range, Progress, Ar
 from bmcs_utils.editors import \
     IntEditor, BoolEditor, FloatEditor, FloatRangeEditor, ProgressEditor, \
     ButtonEditor, ArrayEditor
+from bmcs_utils.parametric_study import ParametricStudy
 
 # TODO [RC]: Define a protocol for the specification of assigned todos - nicknames
 # TODO [RC]: check if ipykernal installation is necessary
