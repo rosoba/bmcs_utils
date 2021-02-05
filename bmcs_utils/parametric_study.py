@@ -4,16 +4,23 @@ import matplotlib.pyplot as plt
 
 class ParametricStudy:
 
-    def run(self, params_config, exp_data=None, log=True):
+    def run(self, params_config_dict, exp_data=None, log=True):
         np.set_printoptions(precision=3)
 
-        nrows = int(len(params_config) / 3)
-        if len(params_config) % 3 != 0:
+        params_num = len(params_config_dict)
+
+        nrows = int(params_num / 3)
+        if params_num % 3 != 0:
             nrows += 1
-        ncols = 3
+
+        ncols = min(params_num, 3)
 
         fig, axes = plt.subplots(nrows=nrows, ncols=ncols, figsize=(7 * ncols, 5 * nrows))
-        axes = axes.flatten()
+
+        if params_num > 1:              # axes is numpy array of AxesSubplot objects
+            axes = axes.flatten()
+        else:                           # axes is a single AxesSubplot object
+            axes = np.array([axes])
 
         if exp_data is not None:
             for i, ax in enumerate(axes):
@@ -25,7 +32,7 @@ class ParametricStudy:
             print('Parametric study is running...')
 
         current_ax_idx = 0
-        for param_name, param_object_and_values in params_config.items():
+        for param_name, param_object_and_values in params_config_dict.items():
             if log:
                 print(param_name + ': ', end='')
 
@@ -78,7 +85,7 @@ if __name__ == '__main__':
     ps = ParamsStudy(dp)
 
     n = 2
-    # Define the params_config such that:
+    # Define the params_config_dict such that:
     # {param_name : (object_which_have_the_param, list of param values), second_param_name... }
     params_config = {
         'L': (dp.beam_design, [4000, 5000]),
