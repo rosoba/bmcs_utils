@@ -4,24 +4,9 @@ import matplotlib.pyplot as plt
 
 class ParametricStudy:
 
-    def run(self, params_config_dict, exp_data=None, log=True):
+    def run(self, params_config, exp_data=None, log=True):
         np.set_printoptions(precision=3)
-
-        params_num = len(params_config_dict)
-
-        nrows = int(params_num / 3)
-        if params_num % 3 != 0:
-            nrows += 1
-
-        ncols = min(params_num, 3)
-
-        fig, axes = plt.subplots(nrows=nrows, ncols=ncols, figsize=(7 * ncols, 5 * nrows))
-
-        if params_num > 1:              # axes is numpy array of AxesSubplot objects
-            axes = axes.flatten()
-        else:                           # axes is a single AxesSubplot object
-            axes = np.array([axes])
-
+        axes = self._get_axes(params_config)
         if exp_data is not None:
             for i, ax in enumerate(axes):
                 w_val = exp_data[0]
@@ -32,32 +17,49 @@ class ParametricStudy:
             print('Parametric study is running...')
 
         current_ax_idx = 0
-        for param_name, param_object_and_values in params_config_dict.items():
+        for param_config in params_config:
             if log:
-                print(param_name + ': ', end='')
+                # print param name
+                print(param_config[0] + ': ', end='')
 
-            param_object = param_object_and_values[0]
-            param_values = param_object_and_values[1]
-            self.plot_for_param_values(param_object, param_name, param_values, axes[current_ax_idx], log)
+            self._plot_for_param_values(param_config, axes[current_ax_idx], log)
             current_ax_idx += 1
 
             if log:
                 print('')
-
         if log:
             print('Parametric study finished.')
         plt.show()
 
-    def plot_for_param_values(self, object_to_set_param_to, param_name, param_values, axes, log):
-        default_value = getattr(object_to_set_param_to, param_name)
+    def _get_axes(self, params_config):
+        params_num = len(params_config)
+        nrows = int(params_num / 3)
+        if params_num % 3 != 0:
+            nrows += 1
+        ncols = min(params_num, 3)
+
+        fig, axes = plt.subplots(nrows=nrows, ncols=ncols, figsize=(7 * ncols, 5 * nrows))
+
+        if params_num > 1:  # axes is numpy array of AxesSubplot objects
+            axes = axes.flatten()
+        else:  # axes is a single AxesSubplot object
+            axes = np.array([axes])
+        return axes
+
+    def _plot_for_param_values(self, param_config, axes, log):
+        param_name = param_config[0]
+        param_object = param_config[1]
+        param_values = param_config[2]
+
+        default_value = getattr(param_object, param_name)
         try:
             for value in param_values:
                 if log:
                     print(str(value) + ', ', end='')
-                setattr(object_to_set_param_to, param_name, value)
+                setattr(param_object, param_name, value)
                 self.plot(axes, param_name, value)
         finally:
-            setattr(object_to_set_param_to, param_name, default_value)
+            setattr(param_object, param_name, default_value)
 
     def plot(self, ax, param_name, value):
         raise NotImplementedError()
@@ -84,11 +86,11 @@ if __name__ == '__main__':
     dp = DeflectionProfile()
     ps = ParamsStudy(dp)
 
-    n = 2
-    # Define the params_config_dict such that:
+    # Define the params_config such that:
     # {param_name : (object_which_have_the_param, list of param values), second_param_name... }
-    params_config = {
-        'L': (dp.beam_design, [4000, 5000]),
-        'E_ct': (dp.mc, [30000, 35000]),
-    }
+    params_config = [
+        ['L', dp.beam_design, [4000, 5000]],
+        ['L', dp.beam_design, [4000, 5000]],
+        ['E_ct', dp.mc, [30000, 35000]],
+    ]
     ps.run(params_config)
