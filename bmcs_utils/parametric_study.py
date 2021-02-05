@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 
 class ParametricStudy:
 
-    def run(self, parameter_ranges, exp_w_f=None, log=True):
+    def run(self, parameter_ranges, exp_data=None, log=True):
         np.set_printoptions(precision=3)
 
         nrows = int(len(parameter_ranges) / 3)
@@ -15,10 +15,10 @@ class ParametricStudy:
         fig, axes = plt.subplots(nrows=nrows, ncols=ncols, figsize=(7 * ncols, 5 * nrows))
         axes = axes.flatten()
 
-        if exp_w_f is not None:
+        if exp_data is not None:
             for i, ax in enumerate(axes):
-                w_val = exp_w_f[0]
-                f_val = exp_w_f[1]
+                w_val = exp_data[0]
+                f_val = exp_data[1]
                 ax.plot(w_val, f_val, c='black', label='Experiment', linestyle='--')
 
         if log:
