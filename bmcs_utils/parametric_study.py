@@ -4,11 +4,11 @@ import matplotlib.pyplot as plt
 
 class ParametricStudy:
 
-    def run(self, parameter_ranges, exp_data=None, log=True):
+    def run(self, params_config, exp_data=None, log=True):
         np.set_printoptions(precision=3)
 
-        nrows = int(len(parameter_ranges) / 3)
-        if len(parameter_ranges) % 3 != 0:
+        nrows = int(len(params_config) / 3)
+        if len(params_config) % 3 != 0:
             nrows += 1
         ncols = 3
 
@@ -25,13 +25,13 @@ class ParametricStudy:
             print('Parametric study is running...')
 
         current_ax_idx = 0
-        for param_name, param_object_and_range in parameter_ranges.items():
+        for param_name, param_object_and_values in params_config.items():
             if log:
                 print(param_name + ': ', end='')
 
-            param_object = param_object_and_range[0]
-            param_range = param_object_and_range[1]
-            self.plot_param_in_range(param_object, param_name, param_range, axes[current_ax_idx], log)
+            param_object = param_object_and_values[0]
+            param_values = param_object_and_values[1]
+            self.plot_for_param_values(param_object, param_name, param_values, axes[current_ax_idx], log)
             current_ax_idx += 1
 
             if log:
@@ -41,14 +41,16 @@ class ParametricStudy:
             print('Parametric study finished.')
         plt.show()
 
-    def plot_param_in_range(self, object_to_set_param_to, param_name, param_range, axes, log):
+    def plot_for_param_values(self, object_to_set_param_to, param_name, param_values, axes, log):
         default_value = getattr(object_to_set_param_to, param_name)
-        for value in np.linspace(*param_range):
-            if log:
-                print(str(value) + ', ', end='')
-            setattr(object_to_set_param_to, param_name, value)
-            self.plot(axes, param_name, value)
-        setattr(object_to_set_param_to, param_name, default_value)
+        try:
+            for value in param_values:
+                if log:
+                    print(str(value) + ', ', end='')
+                setattr(object_to_set_param_to, param_name, value)
+                self.plot(axes, param_name, value)
+        finally:
+            setattr(object_to_set_param_to, param_name, default_value)
 
     def plot(self, ax, param_name, value):
         raise NotImplementedError()
@@ -77,9 +79,9 @@ if __name__ == '__main__':
 
     n = 2
     # Define the params_config such that:
-    # {param_name : (object_which_have_the_param, range which includes the values of the param), second_param_name... }
+    # {param_name : (object_which_have_the_param, list of param values), second_param_name... }
     params_config = {
-        'L': (dp.beam_design, (4000, 5000, n)),
-        'E_ct': (dp.mc, (30000, 35000, n)),
+        'L': (dp.beam_design, [4000, 5000]),
+        'E_ct': (dp.mc, [30000, 35000]),
     }
     ps.run(params_config)
