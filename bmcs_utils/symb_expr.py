@@ -77,7 +77,7 @@ class SymbExpr(tr.HasStrictTraits):
 #                lambda *args: callable(*(args+self.get_model_params(self.model)))
             )
 
-class InjectSymbExpr(tr.HasTraits):
+class InjectSymbExpr(tr.HasStrictTraits):
     '''
     Inject expressions into a model class
     '''
