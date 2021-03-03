@@ -29,30 +29,43 @@ class ModelTab(tr.HasTraits):
         self.model.trait_set(**keyval)
         ipw_view = self.model.ipw_view
         if not ipw_view.simulator:
-            # If there is a simulater defined within the model
-            # do not automatically update the plot. The plotting
-            # is then handled by the simulator itself.
-            self.interactor.update_plot(self.index)
+            # If there is a simulator defined within the model
+            # do not automatically update the plot. The plot event
+            # is then triggered by the simulator itself.
+            self.interactor.update_plot(self.model)
 
     def notify_change(self, event):
         value = event.new
         ipw_editor = self.ipw_editors[event.name]
-        # ipw_editor.unobserve(self.ipw_editor_changed,'value')
         self.freeze_editors = True
         ipw_editor.value = value
         self.freeze_editors = False
-        # ipw_editor.observe(self.ipw_editor_changed, 'value')
 
-    def get_editors(self, model):
-        return self.model.ipw_view.get_editors(self.model, self)
+    tool_bar = tr.Property
+    @tr.cached_property
+    def _get_tool_bar(self):
+        ipw_view = self.model.ipw_view
+        return ipw_view.get_tool_bar(model=self.model, ui_pane=self)
+
+    widget_container = tr.Property
+    @tr.cached_property
+    def _get_widget_container(self):
+        return self.widget_layout()
 
     def widget_layout(self):
+        ipw_view = self.model.ipw_view
+        frame, ipw_editors = ipw_view.get_view_layout(model=self.model,
+                                                      ui_pane=self)
+        self.ipw_editors = ipw_editors
+        return frame
+
+    def xwidget_layout(self):
 
         vlist = []
 
-        editors = self.get_editors(self.model)
-        self.ipw_editors = {}
+        editors = self.model.ipw_view.get_editors(self.model, self)
 
+        self.ipw_editors = {}
         for name, editor in editors.items():
             ipw_editor = editor.render()
             ipw_editor.name = name

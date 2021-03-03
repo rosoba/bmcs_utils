@@ -1,7 +1,8 @@
 import traits.api as tr
 from bmcs_utils.editors import \
     IntEditor, BoolEditor, FloatEditor, FloatRangeEditor, \
-    ProgressEditor, ButtonEditor, SelectionEditor, ArrayEditor
+    ProgressEditor, ButtonEditor, SelectionEditor, ArrayEditor, \
+    InstanceEditor
 
 # Specialized traits
 class Int(tr.BaseInt):
@@ -46,7 +47,8 @@ class Button(tr.Button):
     editor_factory = ButtonEditor
 
 class Selection(tr.TraitType):
-    editor_factor = SelectionEditor
+    editor_factory = SelectionEditor
 
-    def init(self):
-        print(self._metadata)
+class Instance(tr.Instance):
+    editor_factory = InstanceEditor
+

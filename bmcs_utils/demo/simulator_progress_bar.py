@@ -1,19 +1,19 @@
 from bmcs_utils.trait_types import \
-    Float, Int, Bool, FloatRangeEditor, Range, ProgressEditor
+    Float, Int, Bool, FloatRangeEditor, Instance, Range, ProgressEditor, FloatEditor
 from bmcs_utils.interactive_model import InteractiveModel
 from bmcs_utils.item import Item
 from bmcs_utils.view import View
-from bmcs_utils.editors import SelectionEditor
 import numpy as np
 import time
 import traits.api as tr
 
 class CSShape(InteractiveModel):
-
+    """Cross sectional shape"""
     def update_plot(self, axes):
         pass
 
 class Rectangle(CSShape):
+    """Rectangular cross section"""
     H = Float(10, desc=r'first material parameter')
     B = Float(5, desc='input parameter')
 
@@ -23,6 +23,7 @@ class Rectangle(CSShape):
     )
 
 class Circle(CSShape):
+    """Circular shape"""
     R = Float(10, desc=r'first material parameter')
 
     ipw_view = View(
@@ -30,14 +31,17 @@ class Circle(CSShape):
     )
 
 class ExampleModel(InteractiveModel):
+    """Example model with a cross sectional shape"""
     name = 'Example'
 
-    a = Float(0, desc=r'first material parameter')
     b = Int(5, desc='input parameter')
     c = Bool(True)
     t = Float(0)
     t_max = Float(10)
     sim_stop = Bool(False)
+
+    a = Float(0.0, desc=r'first material parameter')
+    kappa_slider = Float(0.0000001)
 
     options = tr.Dict(
         {
@@ -46,11 +50,7 @@ class ExampleModel(InteractiveModel):
         }
     )
 
-    shape = tr.Instance(CSShape)
-    def _shape_default(self):
-        return self.options['rectangle']
-
-#    shape = tr.Either(Rectangle,Circle)
+    shape = Instance(CSShape, ())
 
     ipw_view = View(
         Item('t', editor=ProgressEditor(run_method='run',
@@ -60,11 +60,12 @@ class ExampleModel(InteractiveModel):
                                         time_max='t_max',
                                         )
              ),
-        Item('a', editor=FloatRangeEditor(low=0, high=10)),
-        Item('shape', editor=SelectionEditor(options_trait='options')),
         Item('b', latex=r'\beta', readonly=True),
         Item('t_max', latex=r'\theta'),
-        Item('c', latex=r'\gamma')
+        Item('c', latex=r'\gamma'),
+        Item('a', latex=r'a', editor=FloatRangeEditor(low=0, high=20, n_steps=100)),
+        Item('kappa_slider', latex='\kappa', editor=FloatRangeEditor(low=0, high=20, n_steps=100)),
+        Item('shape'),  # editor=SelectionEditor(options_trait='options')),
     )
 
     def run(self):

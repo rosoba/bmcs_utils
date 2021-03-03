@@ -22,23 +22,6 @@ class View(tr.HasTraits):
             self.content.append(item)
             self.item_names.append(item.name)
 
-    simulator = tr.Str
-    """Name of the method running the model simulation
-    """
-
-    reset_simulator = tr.Str
-    """Name of the method resetting the model simulation
-    """
-
-    time_change_notifier = tr.Str
-    """Name of a trait that can be used by the ui 
-    to register time update method
-    """
-
-    time_range_change_notifier = tr.Str
-    """Name of a trait that can be used by the ui 
-    to register time range update method
-    """
 
     def get_editors(self, model, ui_pane):
         """Return a list of editors linked to a model ordered
@@ -47,7 +30,7 @@ class View(tr.HasTraits):
         items = self.content
         # The traits named in ipw_view are fetched from the model
         # one could directly call `traits` - but then also transient
-        # traits like properties would be be accessed. This would disable
+        # traits like properties would be accessed. This would disable
         # lazy evaluation of properties.
         # Using the self.traits(transient=is_none) does not work either
         # as then no Buttons could be used - they are also transient.
@@ -70,3 +53,66 @@ class View(tr.HasTraits):
         for editor in editors.values():
             editor.ui_pane = ui_pane
         return editors
+
+    def get_view_layout(self, model, ui_pane):
+        vlist = []
+        editors = self.get_editors(model, ui_pane)
+        ipw_editors = {}
+        for name, editor in editors.items():
+            ipw_editor = editor.render()
+            ipw_editor.name = name
+            ipw_editor.observe(ui_pane.ipw_editor_changed, 'value')
+            ipw_editors[name] = ipw_editor
+            editor.model.observe(ui_pane.notify_change, name)
+
+        # Originally, the interactive_output widget was used
+        # here. But in this way, the update method was called
+        # earlier than the tab change observer of the interactor
+        # This caused problems if axes object did not correspond
+        # to the model's update_plot method. Therefore,
+        # slider observer is now used , augmented with the trait name.
+        # out = ipw.interactive_output(self.update, sliders);
+
+        item_names = self.item_names
+        ipw_editors_list = [ipw_editors[name] for name in item_names]
+        box_layout = ipw.Layout(display='flex',
+                            flex_flow='column',
+                            align_items='stretch',
+                            width='100%')
+
+        items_layout = ipw.Layout(width='auto')  # override the default width of the button to 'auto' to let the button grow
+        for ipw_editor in ipw_editors_list:
+            ipw_editor.layout = items_layout
+
+        box = ipw.VBox(ipw_editors_list, layout=box_layout)
+
+        vlist.append(box)
+        frame = ipw.VBox(vlist, layout=box_layout)
+        return frame, ipw_editors
+
+    def get_tool_bar(self, model, ui_pane):
+        return
+
+
+class SimView(View):
+
+    simulator = tr.Str
+    """Name of the method running the model simulation
+    """
+
+    reset_simulator = tr.Str
+    """Name of the method resetting the model simulation
+    """
+
+    time_change_notifier = tr.Str
+    """Name of a trait that can be used by the ui 
+    to register time update method
+    """
+
+    time_range_change_notifier = tr.Str
+    """Name of a trait that can be used by the ui 
+    to register time range update method
+    """
+
+    def get_tool_bar(self, model, ui_pane):
+        pass
