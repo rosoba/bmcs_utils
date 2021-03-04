@@ -64,7 +64,8 @@ class ProgressEditor(EditorFactory):
             time.sleep(1 / self.refresh_freq)
             t = getattr(self.model, self.time_var)
             self.pb.value = t
-            self.ui_pane.interactor.update_plot(self.ui_pane.index)
+            app_window = self.controller.app_window
+            app_window.update_plot(self.model)
         self.run_button.style.button_color = 'lightgray'
         self.interrupt_button.style.button_color = 'lightgray'
         self.reset_button.style.button_color = 'gray'
@@ -144,7 +145,7 @@ class ProgressEditor(EditorFactory):
                 self.reset_button.style.button_color = 'lightgray'
                 self.interrupt_button.style.button_color = 'lightgray'
                 reset_sim()
-                self.ui_pane.interactor.update_plot(self.ui_pane.index)
+                self.controller.app_window.update_plot(self.model)
                 self.pb.value = 0
             self.reset_button.on_click(reset_button_clicked)
             progress_bar_widgets.append(self.reset_button)

@@ -7,13 +7,16 @@ Assume two model components defined as follows
 import bmcs_utils.api as bu
 import traits.api as tr
 
-class M1(bu.InteractiveModel):
-    length = bu.Float(10, GEO=True) 
 
-class M2(bu.InteractiveModel):
+class M1(bu.Model):
+    length = bu.Float(10, GEO=True)
+
+
+class M2(bu.Model):
     m1 = tr.Instance(M1, ())
 
     a = tr.Property(depends_on='+GEO')
+
     @tr.cached_property
     def _get_a(self):
         return self.m1.length ** 2

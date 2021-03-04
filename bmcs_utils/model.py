@@ -1,16 +1,20 @@
 
 import traits.api as tr
-from bmcs_utils.interactive_window import InteractiveWindow
-from bmcs_utils.i_interactive_model import IInteractiveModel
+from bmcs_utils.app_window import AppWindow
+from bmcs_utils.i_model import IModel
+from .controller import Controller
 
 import k3d
 
-@tr.provides(IInteractiveModel)
-class InteractiveModel(tr.HasTraits):
+@tr.provides(IModel)
+class Model(tr.HasTraits):
     """Base class for interactive bmcs_utils
     """
 
     name = tr.Str("<unnamed>")
+
+    def get_controller(self, app_window):
+        return Controller(model=self, app_window=app_window)
 
     plot_backend = 'mpl'
     """"plot_backend = 'mpl' or 'k3d'"""
@@ -30,5 +34,11 @@ class InteractiveModel(tr.HasTraits):
     def update_plot(self, axes):
         raise NotImplementedError()
 
-    def interact(self):
-        return InteractiveWindow(self).interact()
+    def interact(self,**kw):
+        return AppWindow(self,**kw).interact()
+
+    def app(self,**kw):
+        return AppWindow(self,**kw).interact()
+
+# backward compatibility
+InteractiveModel = Model

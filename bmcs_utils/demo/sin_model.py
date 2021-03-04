@@ -1,19 +1,23 @@
 from bmcs_utils.trait_types import \
     Float, Int, Bool, FloatRangeEditor, Instance, Range, ProgressEditor, FloatEditor
-from bmcs_utils.interactive_model import InteractiveModel
+from bmcs_utils.model import Model
 from bmcs_utils.item import Item
 from bmcs_utils.view import View
 import numpy as np
 import time
 import traits.api as tr
 
-class InterimModelComponent(InteractiveModel):
+from bmcs_utils.demo.layout_model import LayoutModel
+
+class SinModel(Model):
     """Example model with a cross sectional shape"""
     name = 'Inbetween'
 
+    layout = tr.Instance(LayoutModel,(), tree=True)
+
     b = Int(5, desc='input parameter')
     c = Bool(True)
-    t = Float(0)
+    t = Float(20)
     t_max = Float(10)
     sim_stop = Bool(False)
 
@@ -26,7 +30,6 @@ class InterimModelComponent(InteractiveModel):
         Item('c', latex=r'\gamma'),
         Item('a', latex=r'a', editor=FloatRangeEditor(low=0, high=20, n_steps=100)),
         Item('kappa_slider', latex='\kappa', editor=FloatRangeEditor(low=0, high=20, n_steps=100)),
-        Item('shape'),  # editor=SelectionEditor(options_trait='options')),
     )
 
     def subplots(self, fig):
@@ -36,6 +39,7 @@ class InterimModelComponent(InteractiveModel):
         return axes
 
     def update_plot(self, axes):
-        t_arr = np.linspace(0, self.t, 100)
+        print('t', self.t)
+        t_arr = np.linspace(0, self.t_max, 100)
         axes.plot(t_arr, np.sin(t_arr) )
 

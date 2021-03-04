@@ -1,36 +1,15 @@
 from bmcs_utils.trait_types import \
     Float, Int, Bool, FloatRangeEditor, Instance, Range, ProgressEditor, FloatEditor
-from bmcs_utils.interactive_model import InteractiveModel
+from bmcs_utils.model import Model
 from bmcs_utils.item import Item
 from bmcs_utils.view import View
 import numpy as np
 import time
 import traits.api as tr
+from bmcs_utils.demo.shape_model import Rectangle, CSShape, Circle
+from bmcs_utils.demo.sin_model import SinModel
 
-class CSShape(InteractiveModel):
-    """Cross sectional shape"""
-    def update_plot(self, axes):
-        pass
-
-class Rectangle(CSShape):
-    """Rectangular cross section"""
-    H = Float(10, desc=r'first material parameter')
-    B = Float(5, desc='input parameter')
-
-    ipw_view = View(
-        Item('H'),
-        Item('B')
-    )
-
-class Circle(CSShape):
-    """Circular shape"""
-    R = Float(10, desc=r'first material parameter')
-
-    ipw_view = View(
-        Item('R'),
-    )
-
-class ExampleModel(InteractiveModel):
+class ProgressCosModel(Model):
     """Example model with a cross sectional shape"""
     name = 'Example'
 
@@ -50,22 +29,23 @@ class ExampleModel(InteractiveModel):
         }
     )
 
-    shape = Instance(CSShape, ())
+    shape = Instance(CSShape, (), tree=True)
+
+    sin_model = Instance(SinModel, (), tree=True)
 
     ipw_view = View(
-        Item('t', editor=ProgressEditor(run_method='run',
-                                        reset_method='reset',
-                                        interrupt_var='sim_stop',
-                                        time_var='t',
-                                        time_max='t_max',
-                                        )
-             ),
         Item('b', latex=r'\beta', readonly=True),
         Item('t_max', latex=r'\theta'),
         Item('c', latex=r'\gamma'),
-        Item('a', latex=r'a', editor=FloatRangeEditor(low=0, high=20, n_steps=100)),
+        Item('a', latex=r'a'),
         Item('kappa_slider', latex='\kappa', editor=FloatRangeEditor(low=0, high=20, n_steps=100)),
         Item('shape'),  # editor=SelectionEditor(options_trait='options')),
+        time_editor=ProgressEditor(run_method='run',
+                                   reset_method='reset',
+                                   interrupt_var='sim_stop',
+                                   time_var='t',
+                                   time_max='t_max',
+        )
     )
 
     def run(self):
@@ -89,5 +69,5 @@ class ExampleModel(InteractiveModel):
 
     def update_plot(self, axes):
         t_arr = np.linspace(0, self.t, 100)
-        axes.plot(t_arr, np.sin(t_arr) )
+        axes.plot(t_arr, np.cos(t_arr) )
 

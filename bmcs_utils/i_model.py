@@ -1,6 +1,6 @@
 
 import traits.api as tr
 
-class IInteractiveModel(tr.Interface):
+class IModel(tr.Interface):
     '''Interactive model interface
     '''

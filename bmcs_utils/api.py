@@ -1,6 +1,6 @@
 
-from bmcs_utils.interactive_window import InteractiveWindow
-from bmcs_utils.interactive_model import InteractiveModel
+from bmcs_utils.app_window import AppWindow, InteractiveWindow
+from bmcs_utils.model import Model, InteractiveModel
 from bmcs_utils.view import View
 from bmcs_utils.item import Item
 from bmcs_utils.mpl_utils import mpl_align_xaxis, mpl_align_yaxis
@@ -11,5 +11,8 @@ from bmcs_utils.editors import \
     ButtonEditor, ArrayEditor
 from bmcs_utils.parametric_study import ParametricStudy
 
-# TODO [RC]: Define a protocol for the specification of assigned todos - nicknames
+# TODO [RC]: Define a protocol for the specification
+#            of assigned todos - nicknames
 # TODO [RC]: check if ipykernal installation is necessary
+# TODO [RC]: InteractiveWindow -> AppWindow - adjustable layout
+# TODO [RC]: InteractiveModel -> ModelComponent
