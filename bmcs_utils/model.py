@@ -4,8 +4,6 @@ from bmcs_utils.app_window import AppWindow
 from bmcs_utils.i_model import IModel
 from .controller import Controller
 
-import k3d
-
 @tr.provides(IModel)
 class Model(tr.HasTraits):
     """Base class for interactive bmcs_utils
