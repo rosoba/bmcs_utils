@@ -30,7 +30,6 @@ class Controller(tr.HasTraits):
         self.model.trait_set(**keyval)
         ipw_view = self.model.ipw_view
         if ipw_view.time_editor == None:
-            print('UPDATING PLOT')
             # If there is a simulator defined within the model
             # do not automatically update the plot. The plot event
             # is then triggered by the simulator itself.
@@ -48,7 +47,7 @@ class Controller(tr.HasTraits):
     @tr.cached_property
     def _get_menu(self):
         ipw_menu = self.model.ipw_menu
-        return ipw_view.get_menu(model=self.model, ui_pane=self)
+        return ipw_menu.get_menu(model=self.model, ui_pane=self)
 
     ipw_editors = tr.Property
     @tr.cached_property

@@ -54,7 +54,7 @@ class AppWindow(tr.HasTraits):
             #border='solid 1px black',
             margin='0px 0px 0px 0px',
             padding='0px 0px 0px 0px',
-            width="250px",
+            width="300px",
             flex_grow="1",
         )
 
@@ -87,15 +87,26 @@ class AppWindow(tr.HasTraits):
                                           width="100%"))
         display(app)
 
-    def get_sub_node(self, name, model):
-        node_dict = model.trait_get(tree=True)
-        sub_nodes = [
-            self.get_sub_node(name, sub_model) for name, sub_model in node_dict.items()
+    def get_tree(self):
+        tree = self.model.get_sub_node(self.model.name)
+        return self.get_tree_entries(tree)
+
+    def get_tree_entries(self, node):
+        name, model, sub_nodes = node
+        bmcs_sub_nodes = [
+            self.get_tree_entries(sub_node) for sub_node in sub_nodes
         ]
-        node = BMCSNode(name, nodes=tuple(sub_nodes),
-                        controller=model.get_controller(self))
-        node.observe(self.select_node, 'selected')
-        return node
+        node_ = BMCSNode(name, nodes=tuple(bmcs_sub_nodes),
+                         controller=model.get_controller(self))
+        node_.observe(self.select_node, 'selected')
+        def update_node(event):
+            '''upon tree change - rebuild the subnodes'''
+            new_node = model.get_sub_node(model.name)
+            new_node_ = self.get_tree_entries(new_node)
+            node_.nodes = new_node_.nodes
+            # are the original nodes deleted? memory leak?
+        model.observe(update_node, 'tree_changed')
+        return node_
 
     tree_pane = tr.Property # might depend on the model
     @tr.cached_property
@@ -110,11 +121,11 @@ class AppWindow(tr.HasTraits):
                                  padding='1px 1px 1px 1px',
                                  align_items='stretch',
                                  flex_grow="2",
-                                 height="30%",
+                                 height="40%",
                                  width='100%')
 
         tree_pane = ipt.Tree(layout=tree_layout)
-        root_node = self.get_sub_node(self.model.name, self.model)
+        root_node = self.get_tree()
         tree_pane.nodes = (root_node,)
         root_node.selected = True
         return tree_pane
@@ -131,7 +142,7 @@ class AppWindow(tr.HasTraits):
             padding='5px 5px 5px 5px',
             margin='0px 5px 0px 0px',
             align_items='flex-start',
-            height="100%", width='100%')
+            height="60%", width='100%')
         return ipw.VBox(layout=editor_pane_layout)
 
     time_editor_pane_layout = tr.Instance(ipw.Layout)
