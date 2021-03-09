@@ -29,23 +29,46 @@ class AppWindow(tr.HasTraits):
         self.model = model
         self.output = ipw.Output()
 
-        self.plot_backend = self.model.plot_backend
-        if self.plot_backend == 'mpl':
-            with self.output:
-                f = plt.figure(figsize=self.figsize, constrained_layout=True)
-            f.canvas.toolbar_position = 'top'
-            f.canvas.header_visible = False
-            self.fig = f
-            self.axes = self.model.subplots(self.fig)
-        elif self.plot_backend == 'k3d':
-            self.k3d_plot = k3d.plot()
-            self.output.append_display_data(self.k3d_plot)
-            self.model.subplots(k3d.plot())
-        else:
-            raise NameError(self.plot_backend + ' is not a valid plot_backend!')
+        #self.plot_backend = self.model.plot_backend
+        # if self.plot_backend == 'mpl':
+        #     with self.output:
+        #         f = plt.figure(figsize=self.figsize, constrained_layout=True)
+        #     f.canvas.toolbar_position = 'top'
+        #     f.canvas.header_visible = False
+        #     self.fig = f
+        #     self.axes = self.model.subplots(self.fig)
+        # elif self.plot_backend == 'k3d':
+        #     self.k3d_plot = k3d.plot()
+        #     print('after k3d plot')
+        #     self.output.append_display_data(self.k3d_plot)
+        #     print('after ouput append')
+        #     self.model.subplots(self.k3d_plot)
+        #     print('after model plot')
+        # else:
+        #     raise NameError(self.plot_backend + ' is not a valid plot_backend!')
+
+    mpl_output = tr.Property
+    @tr.cached_property
+    def _get_mpl_output(self):
+        mpl_output = ipw.Output(layout=ipw.Layout(width="100%"))
+        with mpl_output:
+            fig = plt.figure(figsize=self.figsize, constrained_layout=True)
+        return mpl_output, fig
+
+    k3d_output = tr.Property
+    @tr.cached_property
+    def _get_k3d_output(self):
+        k3d_output = ipw.Output(layout=ipw.Layout(width="100%"))
+        k3d_plot = k3d.Plot()
+        k3d_plot.layout = ipw.Layout(width="100%")
+        with k3d_output:
+            display(k3d_plot)
+        k3d_plot.outputs.append(k3d_output)
+        return k3d_output, k3d_plot
 
     def __del__(self):
-        plt.close(self.fig)
+        _, fig = self.mpl_output
+        plt.close(fig)
 
     # Shared layouts
     left_pane_layout = tr.Instance(ipw.Layout)
@@ -76,18 +99,23 @@ class AppWindow(tr.HasTraits):
             width="100%"
         )
 
+
     def interact(self):
         left_pane = ipw.VBox([self.tree_pane, self.model_editor_pane],
                              layout=self.left_pane_layout)
-        self.output.layout = self.output_pane_layout
-        right_pane = ipw.VBox([self.output, self.time_editor_pane],
+        self.plot_pane = ipw.Box(layout=ipw.Layout(width="100%", height="100%"))
+        #self.output.layout = self.output_pane_layout
+        right_pane = ipw.VBox([self.plot_pane, self.time_editor_pane],
                                layout=self.right_pane_layout)
         app = ipw.HBox([left_pane, right_pane],
                         layout=ipw.Layout(align_items="stretch",
                                           width="100%"))
+        self.model_tree.selected = True
         display(app)
 
-    def get_tree(self):
+    model_tree = tr.Property()
+    @tr.cached_property
+    def _get_model_tree(self):
         tree = self.model.get_sub_node(self.model.name)
         return self.get_tree_entries(tree)
 
@@ -125,9 +153,8 @@ class AppWindow(tr.HasTraits):
                                  width='100%')
 
         tree_pane = ipt.Tree(layout=tree_layout)
-        root_node = self.get_tree()
+        root_node = self.model_tree
         tree_pane.nodes = (root_node,)
-        root_node.selected = True
         return tree_pane
 
     model_editor_pane = tr.Property # should depend on the model
@@ -166,41 +193,43 @@ class AppWindow(tr.HasTraits):
         self.time_editor_pane.children = time_editor
         model_editor = controller.model_editor
         self.model_editor_pane.children = model_editor.children
-        # with self.output:
-        #     print('update plot', node)
+
         self.replot(controller.model)
 
     def replot(self, model):
         # clean k3d
-        if self.plot_backend == 'mpl':
+        if self.model.plot_backend == 'mpl':
+            mpl_output, fig = self.mpl_output
+            self.plot_pane.children = [mpl_output]
             self.update_plot(model)
-        if self.plot_backend == 'k3d':
+        if self.model.plot_backend == 'k3d':
+            k3d_output, k3d = self.k3d_output
+            self.plot_pane.children = [k3d_output]
             # TODO: why the first loop is not removing all the objects! clean this!
-            for obj in self.k3d_plot.objects:
-                self.k3d_plot -= obj
-            for obj in self.k3d_plot.objects:
-                self.k3d_plot -= obj
-            model.plot_k3d(self.k3d_plot)
+            for obj in k3d.objects:
+                self.k3d -= obj
+            for obj in k3d.objects:
+                self.k3d -= obj
+            model.plot_k3d(k3d)
 
     def update_plot(self, model):
-        if self.plot_backend == 'mpl':
+        if self.model.plot_backend == 'mpl':
             """update the visualization with updated bmcs_utils"""
-            self.fig.clf()
-            self.axes = model.subplots(self.fig)
+            _, fig = self.mpl_output
+            print(fig)
+            fig.clf()
+            self.axes = model.subplots(fig)
             _axes = self.axes
             if not hasattr(_axes, '__iter__'):
                 _axes = [_axes]
             for ax in _axes:
                 ax.clear()
-            # with self.output:
-            #     print('model.update', model)
             model.update_plot(self.axes)
-            # if len(self.tab.children) > index:
-            #     self.tab.selected_index = index
-            self.fig.canvas.draw()
-        elif self.plot_backend == 'k3d':
+            fig.canvas.draw()
+        elif self.model.plot_backend == 'k3d':
             # TODO: why the first loop is not removing all the objects! clean this!
-            model.update_plot(self.k3d_plot)
+            _, k3d = self.k3d_output
+            model.update_plot(k3d)
         else:
             raise NameError(self.plot_backend + ' is not a valid plot_backend!')
 

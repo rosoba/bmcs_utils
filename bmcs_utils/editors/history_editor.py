@@ -43,6 +43,8 @@ class HistoryEditor(EditorFactory):
         def change_time_var(event):
             t = event['new']
             setattr(self.model, self.time_var, t)
+            app_window = self.controller.app_window
+            app_window.update_plot(self.model)
 
         history_slider.observe(change_time_var,'value')
 
