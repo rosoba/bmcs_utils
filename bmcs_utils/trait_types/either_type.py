@@ -17,8 +17,6 @@ from bmcs_utils.editors import EitherTypeEditor
 
 import traits.api as tr
 
-tr.Map
-
 class EitherType(TraitType):
     """Polymorphic instance - can accommodate the values
     of specified classes. Instances of the classes are created upon key assignement

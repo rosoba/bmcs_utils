@@ -1,17 +1,7 @@
 import traits.api as tr
 import ipywidgets as ipw
 import numpy as np
-
-class EditorFactory(tr.HasTraits):
-    name = tr.Str
-    model = tr.WeakRef
-    tooltip = tr.Str
-    value = tr.Any
-    trait = tr.Trait
-    label = tr.Str
-    disabled = tr.Bool(False)
-    ui_pane = tr.WeakRef
-
+from .editor_factory import EditorFactory
 
 class FloatEditor(EditorFactory):
     step = tr.Float(1.)

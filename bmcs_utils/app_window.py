@@ -166,6 +166,8 @@ class AppWindow(tr.HasTraits):
         self.time_editor_pane.children = time_editor
         model_editor = controller.model_editor
         self.model_editor_pane.children = model_editor.children
+        # with self.output:
+        #     print('update plot', node)
         self.replot(controller.model)
 
     def replot(self, model):
@@ -190,6 +192,8 @@ class AppWindow(tr.HasTraits):
                 _axes = [_axes]
             for ax in _axes:
                 ax.clear()
+            # with self.output:
+            #     print('model.update', model)
             model.update_plot(self.axes)
             # if len(self.tab.children) > index:
             #     self.tab.selected_index = index

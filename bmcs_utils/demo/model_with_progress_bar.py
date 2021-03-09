@@ -9,7 +9,7 @@ import traits.api as tr
 from bmcs_utils.demo.shape_model import Rectangle, CSShape, Circle
 from bmcs_utils.demo.sin_model import SinModel
 
-class ProgressCosModel(Model):
+class ModelWithProgressBar(Model):
     """Example model with a cross sectional shape"""
     name = 'Example'
 

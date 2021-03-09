@@ -4,20 +4,26 @@ from bmcs_utils.editors import \
     ProgressEditor, ButtonEditor, ArrayEditor, \
     InstanceEditor
 
+class TraitBase:
+    def get_sub_nodes(self):
+        """Let the trait extract the subnodes from its model
+        """
+        return []
+
 # Specialized traits
-class Int(tr.BaseInt):
+class Int(TraitBase, tr.BaseInt):
     editor_factory = IntEditor
 
 
-class Bool(tr.BaseBool):
+class Bool(TraitBase, tr.BaseBool):
     editor_factory = BoolEditor
 
 
-class Float(tr.BaseFloat):
+class Float(TraitBase, tr.BaseFloat):
     editor_factory = FloatEditor
 
 
-class Range(tr.BaseRange):
+class Range(TraitBase, tr.BaseRange):
     editor_factory = FloatRangeEditor
 
 
@@ -25,12 +31,12 @@ class Range(tr.BaseRange):
 #     editor_factory = FloatRangeEditor
 
 
-class Array(tr.Array):
+class Array(TraitBase, tr.Array):
     editor_factory = ArrayEditor
 
 
 ### deprecated -- delete
-class Progress(tr.BaseFloat):
+class Progress(TraitBase, tr.BaseFloat):
     editor_factory = ProgressEditor
 
     def init(self):
@@ -43,9 +49,6 @@ class Progress(tr.BaseFloat):
         for callback in self.notify:
             callback(value)
 
-class Button(tr.Button):
+class Button(TraitBase, tr.Button):
     editor_factory = ButtonEditor
-
-class Instance(tr.Instance):
-    editor_factory = InstanceEditor
 

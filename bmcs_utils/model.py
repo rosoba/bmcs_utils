@@ -11,6 +11,8 @@ class Model(tr.HasTraits):
 
     name = tr.Str("<unnamed>")
 
+    tree = []
+
     def __init__(self,*args,**kw):
         super().__init__(*args, **kw)
         self.update_observers()
@@ -42,37 +44,51 @@ class Model(tr.HasTraits):
     def app(self,**kw):
         return AppWindow(self,**kw).interact()
 
-    @tr.observe('+tree')
+    def get_tree_items(self):
+        return self.tree
+
+    def get_submodels(self):
+        sub_models = []
+        for key in self.get_tree_items():
+            trait = self.trait(key)
+            if trait == None:
+                raise ValueError('trait %s not found in %s' % (key, self))
+            if trait.is_mapped:
+                sub_models.append(getattr(self, key + '_'))
+            else:
+                sub_models.append(getattr(self, key))
+        return sub_models
+
+    def get_sub_node(self, name):
+        # Construct a tree structure of instances tagged by `tree`
+        sub_models = self.get_submodels()
+        sub_nodes = [
+            sub_model.get_sub_node(node_name)
+            for node_name, sub_model in zip(self.tree, sub_models)
+        ]
+        return (name, self, sub_nodes)
+
+    as_node = get_sub_node
+
     def _notify_tree_change(self, event):
         self.tree_changed = True
         self.update_observers()
 
     tree_changed = tr.Event
-
-    def get_sub_node(self, name):
-        # Construct a tree structure of instances tagged by `tree`
-        node_dict = self.traits(tree=True)
-        sub_nodes = []
-        for node_name, trait in node_dict.items():
-            if trait.is_mapped:
-                sub_model = getattr(self, node_name + '_')
-            else:
-                sub_model = getattr(self, node_name)
-            sub_nodes.append(sub_model.get_sub_node(node_name))
-        return (name, self, sub_nodes)
-
-    as_node = get_sub_node
+    """Event signaling the tree widgets to rebuild"""
 
     @tr.observe('+MAT,+CS,+BC,+ALG, +FE, +DSC, +GEO')
     def notify_state_change(self, event):
-        print('state_change', self)
+#        print('state', self, event)
         self.state_changed = True
 
     state_changed = tr.Event
+    """Event used in model implementation to notify the need for update"""
 
     def update_observers(self):
         name, model, nodes = self.as_node('root')
         for sub_name, sub_model, sub_nodes in nodes:
+            model.observe(self._notify_tree_change,sub_name)
             sub_model.observe(model.notify_state_change,'state_changed')
 
 # backward compatibility
