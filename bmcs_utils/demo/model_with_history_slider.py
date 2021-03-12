@@ -9,7 +9,6 @@ import numpy as np
 import time
 import traits.api as tr
 from bmcs_utils.demo.shape_model import Rectangle, CSShape, Circle
-from bmcs_utils.demo.sin_model import SinModel
 
 class ModelWithHistory(Model):
     """Example model with a cross sectional shape"""
@@ -23,10 +22,7 @@ class ModelWithHistory(Model):
         Item('b', latex=r'\beta', readonly=True),
         Item('t', latex=r't', readonly=True),
         Item('t_max', latex=r'\theta'),
-        time_editor=HistoryEditor(run_method='run',
-                                   reset_method='reset',
-                                   interrupt_var='sim_stop',
-                                   time_var='t',
+        time_editor=HistoryEditor(time_var='t',
                                    time_max='t_max',
         )
     )

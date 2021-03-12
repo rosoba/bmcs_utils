@@ -6,6 +6,7 @@ from bmcs_utils.view import View
 import numpy as np
 import time
 import traits.api as tr
+from bmcs_utils.app_window import print_output
 
 class LayoutModel(Model):
     """Example model of a cross sectional area"""
@@ -20,10 +21,14 @@ class LayoutModel(Model):
     )
 
     def subplots(self, fig):
+        with print_output:
+            print('subplots')
         axes = fig.subplots(1,1)
         return axes
 
     def update_plot(self, axes):
+        with print_output:
+            print('update plot')
         x = np.linspace(0,1,self.n)
         axes.plot(x,np.zeros_like(n),marker='o')
 

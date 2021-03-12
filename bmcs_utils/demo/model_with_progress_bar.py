@@ -1,5 +1,6 @@
 from bmcs_utils.trait_types import \
-    Float, Int, Bool, FloatRangeEditor, Instance, Range, ProgressEditor, FloatEditor
+    Float, Int, Bool, FloatRangeEditor, Instance, \
+    Range, ProgressEditor, FloatEditor, EitherType
 from bmcs_utils.model import Model
 from bmcs_utils.item import Item
 from bmcs_utils.view import View
@@ -7,7 +8,7 @@ import numpy as np
 import time
 import traits.api as tr
 from bmcs_utils.demo.shape_model import Rectangle, CSShape, Circle
-from bmcs_utils.demo.sin_model import SinModel
+from bmcs_utils.demo.model_with_volume import SinModel
 
 class ModelWithProgressBar(Model):
     """Example model with a cross sectional shape"""
@@ -22,17 +23,14 @@ class ModelWithProgressBar(Model):
     a = Float(0.0, desc=r'first material parameter')
     kappa_slider = Float(0.0000001)
 
-    options = tr.Dict(
-        {
-            'rectangle': Rectangle(),
-            'circle': Circle()
-        }
-    )
+    shape = EitherType(options=[
+        ('rectangle', Rectangle),
+        ('circle', Circle)
+    ])
 
-    shape = Instance(CSShape, (), tree=True)
+    sin_model = Instance(SinModel, ())
 
-    sin_model = Instance(SinModel, (), tree=True)
-
+    tree = ['shape', 'sin_model']
     ipw_view = View(
         Item('b', latex=r'\beta', readonly=True),
         Item('t_max', latex=r'\theta'),
