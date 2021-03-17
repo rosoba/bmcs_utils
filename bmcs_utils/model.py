@@ -1,6 +1,7 @@
 
 import traits.api as tr
 from bmcs_utils.app_window import AppWindow
+from bmcs_utils.view import View
 from bmcs_utils.i_model import IModel
 from .controller import Controller
 
@@ -12,6 +13,8 @@ class Model(tr.HasTraits):
     name = tr.Str("<unnamed>")
 
     tree = []
+
+    ipw_view = View()
 
     def __init__(self,*args,**kw):
         super().__init__(*args, **kw)
@@ -36,7 +39,7 @@ class Model(tr.HasTraits):
         self.update_plot(axes)
 
     def update_plot(self, axes):
-        raise NotImplementedError()
+        pass
 
     def interact(self,**kw):
         return AppWindow(self,**kw).interact()
@@ -77,10 +80,13 @@ class Model(tr.HasTraits):
     tree_changed = tr.Event
     """Event signaling the tree widgets to rebuild"""
 
-    @tr.observe('+MAT,+CS,+BC,+ALG, +FE, +DSC, +GEO')
+    @tr.observe('+MAT,+CS,+BC,+ALG,+FE,+DSC,+GEO')
     def notify_state_change(self, event):
-#        print('state', self, event)
+        if self.state_change_debug:
+            print('state_changed', self, event)
         self.state_changed = True
+
+    state_change_debug = tr.Bool(False)
 
     state_changed = tr.Event
     """Event used in model implementation to notify the need for update"""
@@ -88,8 +94,10 @@ class Model(tr.HasTraits):
     def update_observers(self):
         name, model, nodes = self.as_node('root')
         for sub_name, sub_model, sub_nodes in nodes:
-            model.observe(self._notify_tree_change,sub_name)
+            model.observe(self._notify_tree_change,'state_changed')
+#            model.observe(self._notify_tree_change,sub_name)
             sub_model.observe(model.notify_state_change,'state_changed')
+
 
 # backward compatibility
 InteractiveModel = Model

@@ -2,12 +2,11 @@
 
 import traits.api as tr
 from .editors import EditorFactory
-import ipywidgets as ipw
-from bmcs_utils.model import Model
+from bmcs_utils.i_model import IModel
 
 class InstanceEditor(EditorFactory):
 
-    value = tr.Instance(Model)
+    value = tr.Instance(IModel)
 
     def render(self):
         app_window = self.controller.app_window

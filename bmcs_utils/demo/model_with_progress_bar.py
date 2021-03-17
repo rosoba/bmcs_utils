@@ -6,9 +6,8 @@ from bmcs_utils.item import Item
 from bmcs_utils.view import View
 import numpy as np
 import time
-import traits.api as tr
 from bmcs_utils.demo.shape_model import Rectangle, CSShape, Circle
-from bmcs_utils.demo.model_with_volume import SinModel
+from bmcs_utils.demo.layout_model import LayoutModel
 
 class ModelWithProgressBar(Model):
     """Example model with a cross sectional shape"""
@@ -28,7 +27,7 @@ class ModelWithProgressBar(Model):
         ('circle', Circle)
     ])
 
-    sin_model = Instance(SinModel, ())
+    sin_model = Instance(LayoutModel, ())
 
     tree = ['shape', 'sin_model']
     ipw_view = View(

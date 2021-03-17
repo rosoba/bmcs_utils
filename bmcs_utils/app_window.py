@@ -16,8 +16,6 @@ from .tree_node import BMCSNode
 
 from bmcs_utils.i_model import IModel
 
-
-
 print_output = ipw.Output(layout=ipw.Layout(width="100%"))
 
 class PlotBackend(tr.HasTraits):
@@ -25,12 +23,16 @@ class PlotBackend(tr.HasTraits):
     plot_fig = tr.Any
 
 class MPLBackend(PlotBackend):
-
+    """Plotting backend for matplotlib
+    """
     def __init__(self, *args, **kw):
         super().__init__(*args,**kw)
         self.plot_widget = ipw.Output(layout=ipw.Layout(width="100%",height="100%"))
         with self.plot_widget:
-            self.plot_fig = plt.figure(figsize=(5, 2), constrained_layout=True)
+            fig = plt.figure(tight_layout=True, *args, **kw)
+        fig.canvas.toolbar_position = 'top'
+        fig.canvas.header_visible = False
+        self.plot_fig = fig
 
     def clear_fig(self):
         pass
@@ -44,7 +46,8 @@ class MPLBackend(PlotBackend):
         model.update_plot(self.axes)
 
 class K3DBackend(PlotBackend):
-
+    """Plotting backend for k3d
+    """
     def __init__(self, *args, **kw):
         super().__init__(*args,**kw)
         self.plot_widget = ipw.Output(layout=ipw.Layout(width="100%", height="100%"))
@@ -231,7 +234,6 @@ class AppWindow(tr.HasTraits):
         pb = self.plot_backend_table[self.current_plot_backend]
         pb.update_plot(model)
         pb.show_fig()
-
 
 
 # backward compatibility

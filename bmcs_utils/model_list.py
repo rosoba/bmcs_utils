@@ -17,15 +17,16 @@ class ModelList(Model):
     def __getitem__(self, key):
         return self.item_dict[key]
 
+    @tr.observe('items_items')
+    def items_list_changed(self, event):
+        if self.state_change_debug:
+            print('LIST STATE CHANGED', event)
+        self.state_changed = True
+
     tree = tr.Property
     def _get_tree(self):
         return self.item_keys
 
     def get_submodels(self):
         return self.items
-
-    ipw_view = View()
-
-    def update_plot(self):
-        pass
 

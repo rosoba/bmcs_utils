@@ -22,8 +22,8 @@ class ModelWithHistory(Model):
         Item('b', latex=r'\beta', readonly=True),
         Item('t', latex=r't', readonly=True),
         Item('t_max', latex=r'\theta'),
-        time_editor=HistoryEditor(time_var='t',
-                                   time_max='t_max',
+        time_editor=HistoryEditor(var='t',
+                                 max_var='t_max',
         )
     )
 
