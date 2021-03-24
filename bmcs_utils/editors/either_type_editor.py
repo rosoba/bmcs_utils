@@ -27,3 +27,4 @@ class EitherTypeEditor(EditorFactory):
     def _selection_changed(self, event):
         setattr(self.model, self.name, event['new'])
         self.instance_pane.children = self._render_instance()
+        self.model.tree_changed = True

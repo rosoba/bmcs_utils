@@ -58,11 +58,17 @@ class K3DBackend(PlotBackend):
         self.plot_fig.outputs.append(self.plot_widget)
 
     def clear_fig(self):
-        for obj in self.plot_fig.objects:
-            self.plot_fig -= obj
-        for obj in self.plot_fig.objects:
-            self.plot_fig -= obj
+        # TODO - check if this double deleting is necessary
+
         self.objects = {}
+        # for obj in self.plot_fig.objects:
+        #     self.plot_fig -= obj
+        # for obj in self.plot_fig.objects:
+        #     self.plot_fig -= obj
+
+        self.plot_fig.objects = []
+        self.plot_fig.object_ids = []
+
     def show_fig(self):
         pass
     def setup_plot(self, model):
@@ -123,8 +129,11 @@ class AppWindow(tr.HasTraits):
         app = ipw.HBox([left_pane, right_pane],
                         layout=ipw.Layout(align_items="stretch",
                                           width="100%"))
+        app_print = ipw.VBox([app, print_output],
+                             layout=ipw.Layout(align_items="stretch",
+                                               width="100%"))
         self.model_tree.selected = True
-        display(app)
+        display(app_print)
 
     model_tree = tr.Property()
     @tr.cached_property
@@ -146,6 +155,7 @@ class AppWindow(tr.HasTraits):
             new_node_ = self.get_tree_entries(new_node)
             node_.nodes = new_node_.nodes
             # are the original nodes deleted? memory leak?
+            # are the original observers deleted?
         model.observe(update_node, 'tree_changed')
         return node_
 
@@ -226,8 +236,6 @@ class AppWindow(tr.HasTraits):
     def setup_plot(self, model):
         pb = self.plot_backend_table[self.current_plot_backend]
         pb.clear_fig()
-        with print_output:
-            print('in setup plot fig')
         pb.setup_plot(model)
 
     def update_plot(self, model):

@@ -75,7 +75,7 @@ class Model(tr.HasTraits):
 
     def _notify_tree_change(self, event):
         self.tree_changed = True
-        self.update_observers()
+#        self.update_observers()
 
     tree_changed = tr.Event
     """Event signaling the tree widgets to rebuild"""
@@ -94,7 +94,7 @@ class Model(tr.HasTraits):
     def update_observers(self):
         name, model, nodes = self.as_node('root')
         for sub_name, sub_model, sub_nodes in nodes:
-            model.observe(self._notify_tree_change,'state_changed')
+#            model.observe(self._notify_tree_change,'state_changed')
 #            model.observe(self._notify_tree_change,sub_name)
             sub_model.observe(model.notify_state_change,'state_changed')
 

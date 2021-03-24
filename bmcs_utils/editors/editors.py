@@ -26,6 +26,11 @@ class BoolEditor(EditorFactory):
         return ipw.Checkbox(description=self.label, value=self.value,
                             tooltip=self.tooltip, disabled=self.disabled)
 
+class TextEditor(EditorFactory):
+    def render(self):
+        return ipw.Text(description=self.label, value=self.value,
+                            tooltip=self.tooltip, disabled=self.disabled)
+
 
 class FloatRangeEditor(EditorFactory):
     low = tr.Float

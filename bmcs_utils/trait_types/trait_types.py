@@ -2,7 +2,7 @@ import traits.api as tr
 from bmcs_utils.editors import \
     IntEditor, BoolEditor, FloatEditor, FloatRangeEditor, \
     ProgressEditor, ButtonEditor, ArrayEditor, \
-    InstanceEditor
+    TextEditor
 
 class TraitBase:
     def get_sub_nodes(self):
@@ -27,8 +27,8 @@ class Range(TraitBase, tr.BaseRange):
     editor_factory = FloatRangeEditor
 
 
-# class Enum(tr.BaseEnum):
-#     editor_factory = FloatRangeEditor
+class Str(TraitBase, tr.Str):
+    editor_factory = TextEditor
 
 
 class Array(TraitBase, tr.Array):
