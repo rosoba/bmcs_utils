@@ -4,7 +4,7 @@ import numpy as np
 from .editor_factory import EditorFactory
 
 class FloatEditor(EditorFactory):
-    step = tr.Float(1.)
+    step = tr.Float(None)
     def render(self):
         return ipw.FloatText(description=self.label,
                              value=self.value, step=self.step,
