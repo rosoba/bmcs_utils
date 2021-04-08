@@ -10,6 +10,7 @@ class View(tr.HasTraits):
     """
     content = tr.List(Item)
     item_names = tr.List(tr.Str)
+    eager_plot_update = tr.Bool(True)
     time_editor = tr.Instance(EditorFactory)
     # -------------------------------------------------------------------------
     #  Initializes the object:

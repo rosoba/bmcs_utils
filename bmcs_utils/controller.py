@@ -29,7 +29,7 @@ class Controller(tr.HasTraits):
         keyval = {name: val}
         self.model.trait_set(**keyval)
         ipw_view = self.model.ipw_view
-        if ipw_view.time_editor == None:
+        if ipw_view.eager_plot_update:
             # If there is a simulator defined within the model
             # do not automatically update the plot. The plot event
             # is then triggered by the simulator itself.

@@ -13,6 +13,9 @@ class HistoryEditor(EditorFactory):
     """
     label = 'history'
     var = tr.Str('t')
+    min_value = tr.Float(0)
+    max_value = tr.Float(1)
+    step = tr.Float(0.01)
     min_var = tr.Str('')
     max_var = tr.Str('')
     step = tr.Str('')
@@ -25,7 +28,7 @@ class HistoryEditor(EditorFactory):
     t_min = tr.Property
     def _get_t_min(self):
         if self.min_var == '':
-            t_min = 0
+            t_min = self.min_value
         else:
             t_min = getattr(self.model, str(self.min_var))
         return t_min
@@ -33,7 +36,7 @@ class HistoryEditor(EditorFactory):
     t_max = tr.Property
     def _get_t_max(self):
         if self.max_var == '':
-            t_max = 0
+            t_max = self.max_value
         else:
             t_max = getattr(self.model, str(self.max_var))
         return t_max
@@ -41,17 +44,14 @@ class HistoryEditor(EditorFactory):
     step = tr.Property
     def _get_step(self):
         if self.step == '':
-            step = 0.01
+            step = self.step
         else:
             step = getattr(self.model, str(self.step))
         return step
 
     def render(self):
         history_bar_widgets = []
-
         eta = (getattr(self.model, str(self.var)) - self.t_min) / (self.t_max - self.t_min)
-
-        print('eta', eta)
         history_slider = ipw.FloatSlider(
             value=eta,
             min=0,
