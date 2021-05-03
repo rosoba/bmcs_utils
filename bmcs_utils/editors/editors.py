@@ -20,6 +20,28 @@ class IntEditor(EditorFactory):
                            tooltip=self.tooltip,
                            disabled=self.disabled)
 
+class IntRangeEditor(EditorFactory):
+    low = tr.Int(0)
+    high = tr.Int(1)
+    low_name = tr.Str
+    high_name = tr.Str
+    continuous_update = tr.Bool(False)
+
+    def render(self):
+        low = self.low
+        high = self.high
+        if self.low_name:
+            self.low = getattr(self.model, str(self.low_name))
+        if self.high_name:
+            self.high = getattr(self.model, str(self.high_name))
+        if self.n_steps_name:
+            self.n_steps = getattr(self.model, str(self.n_steps_name))
+        return ipw.IntRangeSlider(
+            description=self.label,
+            value=self.value, min=low, max=high,
+            tooltip=self.tooltip,
+            disabled=self.disabled
+        )
 
 class BoolEditor(EditorFactory):
     def render(self):

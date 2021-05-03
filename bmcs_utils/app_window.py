@@ -218,13 +218,20 @@ class AppWindow(tr.HasTraits):
         self.time_editor_pane.children = time_editor
         model_editor = controller.model_editor
         self.model_editor_pane.children = model_editor.children
-
+        # with print_output:
+        #     print('select node: controller', controller)
+        #     print('time_editor: time_editor', time_editor)
         backend = controller.model.plot_backend
         self.set_plot_backend(backend)
         self.setup_plot(controller.model)
         self.update_plot(controller.model)
 
     current_plot_backend = tr.Str
+
+    pb = tr.Property()
+    def _get_pb(self):
+        '''Get the current plot backend'''
+        return self.plot_backend_table[self.current_plot_backend]
 
     def set_plot_backend(self, backend):
         if self.current_plot_backend == backend:

@@ -5,7 +5,7 @@ import ipywidgets as ipw
 import numpy as np
 import time
 from threading import Thread
-
+import bmcs_utils.api as bu
 
 class HistoryEditor(EditorFactory):
     """
@@ -68,6 +68,8 @@ class HistoryEditor(EditorFactory):
 
         def change_time_var(event):
             eta = event['new']
+            # with bu.print_output:
+            #     print('slider on',self.model)
             t = self.t_min + (self.t_max - self.t_min) * eta
             setattr(self.model, self.var, t)
             app_window = self.controller.app_window
