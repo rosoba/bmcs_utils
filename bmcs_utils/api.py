@@ -8,7 +8,7 @@ from bmcs_utils.mpl_utils import mpl_align_xaxis, mpl_align_yaxis, mpl_align_yax
 from bmcs_utils.symb_expr import SymbExpr, InjectSymbExpr
 from bmcs_utils.trait_types import Int, Float, Bool, Str, \
     Button, Range, Progress, Array, \
-    EitherType, Instance, List
+    EitherType, Enum, Instance, List
 from bmcs_utils.editors import \
     IntEditor, BoolEditor, FloatEditor, FloatRangeEditor, ProgressEditor, \
     ButtonEditor, ArrayEditor, InstanceEditor, EitherTypeEditor, ListEditor, \
