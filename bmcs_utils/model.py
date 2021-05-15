@@ -80,7 +80,7 @@ class Model(tr.HasTraits):
     tree_changed = tr.Event
     """Event signaling the tree widgets to rebuild"""
 
-    @tr.observe('+MAT,+CS,+BC,+ALG,+FE,+DSC,+GEO')
+    @tr.observe('+TIME,+MESH,+MAT,+CS,+BC,+ALG,+FE,+DSC,+GEO,+ITR')
     def notify_state_change(self, event):
         if self.state_change_debug:
             print('state_changed', self, event)

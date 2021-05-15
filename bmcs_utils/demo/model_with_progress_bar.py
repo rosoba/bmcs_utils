@@ -22,10 +22,8 @@ class ModelWithProgressBar(Model):
     a = Float(0.0, desc=r'first material parameter')
     kappa_slider = Float(0.0000001)
 
-    shape = EitherType(options=[
-        ('rectangle', Rectangle),
-        ('circle', Circle)
-    ])
+    shape = EitherType(options=[('rectangle', Rectangle),
+                                ('circle', Circle)])
 
     sin_model = Instance(LayoutModel, ())
 

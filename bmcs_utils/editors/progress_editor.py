@@ -1,5 +1,7 @@
 
 import traits.api as tr
+
+import bmcs_utils.app_window
 from .editors import EditorFactory
 import ipywidgets as ipw
 
@@ -31,64 +33,6 @@ class ProgressEditor(EditorFactory):
     time_var = tr.Str
     time_max = tr.Str
     refresh_freq = tr.Float(2)
-
-    #=========================================================================
-    # COMPUTATION THREAD
-    #=========================================================================
-    _run_thread = tr.Instance(RunSimThread)
-    _running = tr.Bool(False)
-
-    def run(self, model):
-        r'''Run the simulation - can be started either directly or from a thread
-        '''
-        self._running = True
-        try:
-            # start the calculation
-            run_fn = getattr(model, str(self.run_method))
-            run_fn()
-
-        except Exception as e:
-            self._running = False
-            raise e  # re-raise exception
-
-        self._running = False
-
-    def watch(self, model):
-        r"""Watch the loop and update the progress bar
-        """
-        t = getattr(self.model, self.time_var)
-        t_max = getattr(self.model, self.time_max)
-        while self._running: # and t <= t_max:
-            if (self.interrupt_var is not None) and getattr(self.model, self.interrupt_var):
-                break
-            time.sleep(1 / self.refresh_freq)
-            t = getattr(self.model, self.time_var)
-            self.pb.value = t
-            app_window = self.controller.app_window
-            app_window.update_plot(self.model)
-        self.run_button.style.button_color = 'lightgray'
-        self.interrupt_button.style.button_color = 'lightgray'
-        self.reset_button.style.button_color = 'gray'
-
-    def run_thread(self, model):
-        r'''Run a thread if it does not exist - do nothing otherwise
-        '''
-        if self._running:
-            return
-
-        self._run_thread = RunSimThread(self.run, model)
-        self._run_thread.start()
-        self._watch_thread = RunSimThread(self.watch, model)
-        self._watch_thread.start()
-
-    def join_run_thread(self):
-        r'''Wait until the thread finishes
-        '''
-        if self._run_thread == None:
-            self._running = False
-            return
-        self._run_thread.join()
-        self._watch_thread.join()
 
     def render(self):
         progress_bar_widgets = []
@@ -154,4 +98,64 @@ class ProgressEditor(EditorFactory):
                                 layout=ipw.Layout(padding='0px'))
         progress_box.layout.align_items = 'center'
         return progress_box
+
+    #=========================================================================
+    # COMPUTATION THREAD
+    #=========================================================================
+    _run_thread = tr.Instance(RunSimThread)
+    _running = tr.Bool(False)
+
+    def run(self, model):
+        r'''Run the simulation - can be started either directly or from a thread
+        '''
+        self._running = True
+        try:
+            # start the calculation
+            run_fn = getattr(model, str(self.run_method))
+            run_fn()
+            # with bmcs_utils.app_window.print_output:
+            #     print('run finished')
+            # t = getattr(self.model, self.time_var)
+            # self.pb.value = t
+
+        except Exception as e:
+            self._running = False
+            raise e  # re-raise exception
+
+        self._running = False
+
+    def watch(self, model):
+        r"""Watch the loop and update the progress bar
+        """
+        while self._running: # and t <= t_max:
+            if (self.interrupt_var is not None) and getattr(self.model, self.interrupt_var):
+                break
+            time.sleep(1 / self.refresh_freq)
+            t = getattr(self.model, self.time_var)
+            self.pb.value = t
+            app_window = self.controller.app_window
+            app_window.update_plot(self.model)
+        self.run_button.style.button_color = 'lightgray'
+        self.interrupt_button.style.button_color = 'lightgray'
+        self.reset_button.style.button_color = 'gray'
+
+    def run_thread(self, model):
+        r'''Run a thread if it does not exist - do nothing otherwise
+        '''
+        if self._running:
+            return
+        print('start thread')
+        self._run_thread = RunSimThread(self.run, model)
+        self._run_thread.start()
+        self._watch_thread = RunSimThread(self.watch, model)
+        self._watch_thread.start()
+
+    def join_run_thread(self):
+        r'''Wait until the thread finishes
+        '''
+        if self._run_thread == None:
+            self._running = False
+            return
+        self._run_thread.join()
+        self._watch_thread.join()
 
