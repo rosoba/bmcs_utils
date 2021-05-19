@@ -4,8 +4,8 @@ import ipywidgets as ipw
 
 
 class Controller(tr.HasTraits):
-    '''Model controler is constructed autaomatically when
-     a model is accessed from an application window.'''
+    """Model controller is constructed automatically when
+     a model is accessed from an application window."""
 
     index = tr.Int
 

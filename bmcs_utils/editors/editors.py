@@ -3,6 +3,9 @@ import ipywidgets as ipw
 import numpy as np
 from .editor_factory import EditorFactory
 
+# This style insures that the widget label doesn't take additional white space
+style = {'description_width': 'initial'}
+
 class FloatEditor(EditorFactory):
     step = tr.Float(None)
     def render(self):
@@ -40,7 +43,8 @@ class IntRangeEditor(EditorFactory):
             description=self.label,
             value=self.value, min=low, max=high,
             tooltip=self.tooltip,
-            disabled=self.disabled
+            disabled=self.disabled,
+            style=style
         )
 
 class BoolEditor(EditorFactory):
@@ -86,6 +90,7 @@ class FloatRangeEditor(EditorFactory):
 
         # This is for SelectionSlider because 'value' must match exactly one of values array
         self.value = self._find_nearest(values, self.value)
+
         return ipw.SelectionSlider(
             options=values,
             value=self.value,
@@ -94,6 +99,7 @@ class FloatRangeEditor(EditorFactory):
             description=self.label,
             disabled=self.disabled,
             readout=self.readout,
+            style=style
         )
 
         # return ipw.FloatSlider(

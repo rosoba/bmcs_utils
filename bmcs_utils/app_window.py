@@ -165,14 +165,13 @@ class AppWindow(tr.HasTraits):
         # provide a method scanning the tree of the model
         # components
         tree_layout = ipw.Layout(display='flex',
-                                 overflow_y='scroll',
+                                 overflow='scroll hidden',
                                  flex_flow='column',
                                  border='solid 1px black',
                                  margin='0px 5px 5px 0px',
-                                 padding='1px 1px 1px 1px',
+                                 padding='1px 1px 15px 1px',
                                  align_items='stretch',
                                  flex_grow="2",
-                                 height="40%",
                                  width='100%')
 
         tree_pane = ipt.Tree(layout=tree_layout)
@@ -186,13 +185,13 @@ class AppWindow(tr.HasTraits):
         editor_pane_layout = ipw.Layout(
             display='flex',
             border='solid 1px black',
-            overflow_y='scroll',
+            overflow='scroll hidden',
             justify_content='space-between',
             flex_flow='column',
-            padding='5px 5px 5px 5px',
+            padding='10px 5px 10px 5px',
             margin='0px 5px 0px 0px',
             align_items='flex-start',
-            height="60%", width='100%')
+            width='100%')
         return ipw.VBox(layout=editor_pane_layout)
 
     time_editor_pane_layout = tr.Instance(ipw.Layout)
