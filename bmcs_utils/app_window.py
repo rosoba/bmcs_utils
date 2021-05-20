@@ -172,6 +172,7 @@ class AppWindow(tr.HasTraits):
                                  padding='1px 1px 15px 1px',
                                  align_items='stretch',
                                  flex_grow="2",
+                                 height="30%",
                                  width='100%')
 
         tree_pane = ipt.Tree(layout=tree_layout)
@@ -191,6 +192,7 @@ class AppWindow(tr.HasTraits):
             padding='10px 5px 10px 5px',
             margin='0px 5px 0px 0px',
             align_items='flex-start',
+            height="70%",
             width='100%')
         return ipw.VBox(layout=editor_pane_layout)
 
