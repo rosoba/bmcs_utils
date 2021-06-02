@@ -44,7 +44,7 @@ class View(tr.HasTraits):
         # 3) - construct a list ordered according to `item_names` with
         #      values of transient traits set to none
         values_ = [val_dict.get(name, None) for name in item_names]
-        # 4) - order the corresponding traits according item_names
+        # 4) - order the corresponding traits according item_names.
         traits_ = [model.trait(name) for name in item_names]
         # construct a dictionary of editors that can be rendered
         editors = {
