@@ -93,7 +93,7 @@ class AppWindow(tr.HasTraits):
     def _plot_backend_table_default(self):
         return{'mpl': MPLBackend(), 'k3d': K3DBackend()}
 
-    # Shared layouts
+    # Shared layouts -
     left_pane_layout = tr.Instance(ipw.Layout)
     def _left_pane_layout_default(self):
         return ipw.Layout(
