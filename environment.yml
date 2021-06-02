@@ -13,7 +13,6 @@ dependencies:
 - ipympl
 - ipytree
 - ipyregulartable
-- k3d
 - pip
 - pip:
   - -e .
