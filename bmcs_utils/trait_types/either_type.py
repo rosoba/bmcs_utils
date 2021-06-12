@@ -25,9 +25,10 @@ class EitherType(TraitType):
 
     is_mapped = True
 
-    def __init__(self, options = [], **metadata):
+    def __init__(self, options = [], on_option_change=None, **metadata):
         # validate that these are trait types
         self.options_dict = {key: value for key, value in options}
+        self.on_option_change = on_option_change
         metadata.update({'options': options})
         super(EitherType, self).__init__(**metadata)
         self.map = {}
@@ -47,6 +48,8 @@ class EitherType(TraitType):
         # set the shadow attribute
         # editor uses it to asociate the value with the option.
         setattr(object, name + "_", new_value)
+        if self.on_option_change:
+            getattr(object, self.on_option_change)()
 
     def validate(self, object, name, key):
         ''' Set the trait value '''
@@ -59,3 +62,4 @@ class EitherType(TraitType):
         '''Take the first class to construct the value'''
         key, _ = self.options[0]
         return (0, key)
+
