@@ -57,6 +57,19 @@ class TextEditor(EditorFactory):
         return ipw.Text(description=self.label, value=self.value,
                             tooltip=self.tooltip, disabled=self.disabled)
 
+class TextAreaEditor(EditorFactory):
+    placeholder = tr.Str
+
+    def render(self):
+        if not self.placeholder:
+            self.placeholder = 'Type multi-line text'
+
+        return ipw.Textarea(
+            description=self.label,
+            value=self.value,
+            disabled=self.disabled,
+            placeholder=self.placeholder,
+        )
 
 class FloatRangeEditor(EditorFactory):
     low = tr.Float

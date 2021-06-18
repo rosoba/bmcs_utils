@@ -1,6 +1,6 @@
 
 from .editors import IntEditor, FloatEditor, FloatRangeEditor, \
-    BoolEditor, ButtonEditor, ArrayEditor, TextEditor
+    BoolEditor, ButtonEditor, ArrayEditor, TextEditor, TextAreaEditor
 from .progress_editor import ProgressEditor
 from .history_editor import HistoryEditor
 from .either_type_editor import EitherTypeEditor
