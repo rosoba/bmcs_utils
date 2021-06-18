@@ -1,8 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from .model import Model
 
-
-class ParametricStudy:
+class ParametricStudy(Model):
 
     def run(self, params_config, exp_data=None, log=True):
         np.set_printoptions(precision=3)

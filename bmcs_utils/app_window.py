@@ -165,7 +165,8 @@ class AppWindow(tr.HasTraits):
         # provide a method scanning the tree of the model
         # components
         tree_layout = ipw.Layout(display='flex',
-                                 overflow='scroll hidden',
+#                                 overflow='scroll hidden',
+                                 overflow_y='scroll',
                                  flex_flow='column',
                                  border='solid 1px black',
                                  margin='0px 5px 5px 0px',

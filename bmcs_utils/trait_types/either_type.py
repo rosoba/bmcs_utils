@@ -19,7 +19,7 @@ import traits.api as tr
 
 class EitherType(TraitType):
     """Polymorphic instance - can accommodate the values
-    of specified classes. Instances of the classes are created upon key assignement
+    of specified classes. Instances of the classes are created upon key assignment
     Unused instances are kept in cache."""
     editor_factory = EitherTypeEditor
 
@@ -46,7 +46,7 @@ class EitherType(TraitType):
             new_value = klass()
             self.map[key] = new_value
         # set the shadow attribute
-        # editor uses it to asociate the value with the option.
+        # editor uses it to associate the value with the option.
         setattr(object, name + "_", new_value)
         if self.on_option_change:
             getattr(object, self.on_option_change)()

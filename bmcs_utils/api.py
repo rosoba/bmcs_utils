@@ -14,3 +14,4 @@ from bmcs_utils.editors import \
     ButtonEditor, ArrayEditor, InstanceEditor, EitherTypeEditor, ListEditor, \
     HistoryEditor
 from bmcs_utils.parametric_study import ParametricStudy
+from bmcs_utils.data_cache import data_cache
