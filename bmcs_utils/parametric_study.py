@@ -3,6 +3,8 @@ import matplotlib.pyplot as plt
 from .model import Model
 
 class ParametricStudy(Model):
+    name = 'Parametric Study'
+    tree = []
 
     def run(self, params_config, exp_data=None, log=True):
         np.set_printoptions(precision=3)
@@ -20,7 +22,13 @@ class ParametricStudy(Model):
         for param_config in params_config:
             if log:
                 # print param name
-                print(param_config[0] + ': ', end='')
+                params_str = ''
+                if self._are_multiple_params(param_config):
+                    for param in param_config:
+                        params_str += param[0] + ', '
+                    print(params_str[0:-2] + ': ', end='')
+                else:
+                    print(param_config[0] + ': ', end='')
 
             self._plot_for_param_values(param_config, axes[current_ax_idx], log)
             current_ax_idx += 1
@@ -47,23 +55,57 @@ class ParametricStudy(Model):
         return axes
 
     def _plot_for_param_values(self, param_config, axes, log):
-        param_name = param_config[0]
-        param_object = param_config[1]
-        param_values = param_config[2]
+        if self._are_multiple_params(param_config):
+            # The user provided list of lists that means multiple params to be changed together
+            self._plot_for_param_conf_list(param_config, axes, log)
+        else:
+            self._plot_for_param_conf_list([param_config], axes, log)
 
-        default_value = getattr(param_object, param_name)
-        try:
-            for value in param_values:
-                if log:
-                    print(str(value) + ', ', end='')
-                setattr(param_object, param_name, value)
-                self.plot(axes, param_name, value)
-        finally:
-            setattr(param_object, param_name, default_value)
+    def _plot_for_param_conf_list(self, param_configs, axes, log):
+        param_values_1 = param_configs[0][2]
+        parallel_param_names = [param_config[0] for param_config in param_configs]
 
-    def plot(self, ax, param_name, value):
+        for i_value in range(len(param_values_1)):
+            values_str = ''
+            parallel_param_values = []
+            default_values = []
+            # Assign param values for first value series
+            for param_config in param_configs:
+                param_name = param_config[0]
+                param_object = param_config[1]
+                param_values = param_config[2]
+                value = param_values[i_value]
+                parallel_param_values.append(value)
+                values_str += str(value) + ', '
+                default_values.append(getattr(param_object, param_name))
+                try:
+                    setattr(param_object, param_name, value)
+                except:
+                    print('Param assignment failed!')
+            values_str = '(' + values_str[0:-2] + '), '
+            if log:
+                print(values_str, end='')
+            self.plot(axes, *self._get_plot_title_and_label(parallel_param_names, parallel_param_values))
+
+            # set default values again
+            for i, param_config in enumerate(param_configs):
+                param_name = param_config[0]
+                param_object = param_config[1]
+                setattr(param_object, param_name, default_values[i])
+
+    def plot(self, ax, title, curve_label):
         raise NotImplementedError()
 
+    def _are_multiple_params(self, param_config):
+        return isinstance(param_config[0], list)
+
+    def _get_plot_title_and_label(self, param_names, values):
+        label = ''
+        title = ''
+        for param_name, value in zip(param_names, values):
+            label += param_name + '=' + str(value) + ', '
+            title += param_name + ', '
+        return title[0:-2], label[0:-2]
 
 # Usage example
 if __name__ == '__main__':
