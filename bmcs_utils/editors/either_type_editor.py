@@ -5,6 +5,7 @@ from .editors import EditorFactory
 import ipywidgets as ipw
 
 class EitherTypeEditor(EditorFactory):
+    show_properties = tr.Bool(True)
     """Polymorphic instance editor.
     """
     def render(self):
@@ -16,7 +17,11 @@ class EitherTypeEditor(EditorFactory):
         self.drop_down.observe(self._selection_changed_from_dropdown,'value')
         self.model.observe(self._selection_changed_from_model,self.name)
         self.instance_pane = ipw.VBox(self._render_instance())
-        return ipw.VBox([self.drop_down, self.instance_pane])
+
+        if self.show_properties:
+            return ipw.VBox([self.drop_down, self.instance_pane])
+        else:
+            return self.drop_down
 
     def _render_instance(self):
         app_window = self.controller.app_window

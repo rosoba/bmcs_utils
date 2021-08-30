@@ -6,6 +6,7 @@ from .editor_factory import EditorFactory
 # This style insures that the widget label doesn't take additional white space
 style = {'description_width': 'initial'}
 
+
 class FloatEditor(EditorFactory):
     step = tr.Float(None)
     def render(self):
@@ -23,7 +24,8 @@ class IntEditor(EditorFactory):
                            tooltip=self.tooltip,
                            disabled=self.disabled)
 
-class IntRangeEditor(EditorFactory):
+
+class IntSliderEditor(EditorFactory):
     low = tr.Int(0)
     high = tr.Int(1)
     low_name = tr.Str
@@ -37,9 +39,7 @@ class IntRangeEditor(EditorFactory):
             self.low = getattr(self.model, str(self.low_name))
         if self.high_name:
             self.high = getattr(self.model, str(self.high_name))
-        if self.n_steps_name:
-            self.n_steps = getattr(self.model, str(self.n_steps_name))
-        return ipw.IntRangeSlider(
+        return ipw.IntSlider(
             description=self.label,
             value=self.value, min=low, max=high,
             tooltip=self.tooltip,
@@ -47,15 +47,22 @@ class IntRangeEditor(EditorFactory):
             style=style
         )
 
+
+# Backward compatibility (renaming)
+IntRangeEditor = IntSliderEditor
+
+
 class BoolEditor(EditorFactory):
     def render(self):
         return ipw.Checkbox(description=self.label, value=self.value,
                             tooltip=self.tooltip, disabled=self.disabled)
 
+
 class TextEditor(EditorFactory):
     def render(self):
         return ipw.Text(description=self.label, value=self.value,
                             tooltip=self.tooltip, disabled=self.disabled)
+
 
 class TextAreaEditor(EditorFactory):
     placeholder = tr.Str
@@ -69,9 +76,11 @@ class TextAreaEditor(EditorFactory):
             value=self.value,
             disabled=self.disabled,
             placeholder=self.placeholder,
+            style=style,
         )
 
-class FloatRangeEditor(EditorFactory):
+
+class FloatSliderEditor(EditorFactory):
     low = tr.Float
     high = tr.Float
     low_name = tr.Str
@@ -148,6 +157,10 @@ class FloatRangeEditor(EditorFactory):
         sci_num = '{:.1e}'.format(num)
         sci_num_suffix = sci_num.split('e')[1]
         return int(sci_num_suffix)
+
+
+# Backward compatibility (renaming)
+FloatRangeEditor = FloatSliderEditor
 
 
 class ButtonEditor(EditorFactory):
