@@ -40,7 +40,11 @@ class EitherType(TraitType):
     def post_setattr(self, object, name, key):
         # check if the last instance of the klass has been
         # registered earlier in the trait history
-        new_value = self.mapped_value(key)
+        # new_value = self.mapped_value(key)
+        # TODO: the following line is a quick fix because cached values are casuing the
+        #  properites of the last added instance to propagate to all earlier instances
+        #  (like adding multiple carbon layers in bmcs_cross_section)
+        new_value = None
         if new_value == None:
             klass = self.options_dict.get(key, None)
             new_value = klass()
@@ -59,6 +63,10 @@ class EitherType(TraitType):
         return key
 
     def get_default_value(self):
+        # TODO: This is creating a default instance always even when choosing different option.
+        #  For example setting matmod here ReinfLayer(z=10, A=1, matmod='carbon') will create
+        #  steel instance (default) and then again carbon instance. If there's a way to avoid
+        #  this behaviour it would be better for the performance especially with big options classes.
         '''Take the first class to construct the value'''
         key, _ = self.options[0]
         return (0, key)
