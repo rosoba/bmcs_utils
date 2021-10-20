@@ -69,6 +69,16 @@ class K3DBackend(PlotBackend):
         self.plot_fig.objects = []
         self.plot_fig.object_ids = []
 
+    def clear_object(self, object_key):
+        obj = self.objects[object_key]
+        if isinstance(obj, list):
+            objs = obj
+            for ob in objs:
+                self.plot_fig -= ob
+        else:
+            self.plot_fig -= obj
+        self.objects.pop(object_key)
+
     def show_fig(self):
         pass
     def setup_plot(self, model):
