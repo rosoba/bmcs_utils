@@ -54,17 +54,15 @@ class K3DBackend(PlotBackend):
         self.plot_fig = k3d.Plot()
         self.plot_fig.layout = ipw.Layout(width="100%",height="100%")
         with self.plot_widget:
-            display(self.plot_fig)
+            self.plot_fig.display()
         self.plot_fig.outputs.append(self.plot_widget)
 
-    def clear_fig(self):
-        # TODO - check if this double deleting is necessary
-
         self.objects = {}
-        # for obj in self.plot_fig.objects:
-        #     self.plot_fig -= obj
-        # for obj in self.plot_fig.objects:
-        #     self.plot_fig -= obj
+
+    def clear_fig(self):
+        self.objects = {}
+        # while self.plot_fig.objects:
+        #     self.plot_fig -= self.plot_fig.objects[-1]
 
         self.plot_fig.objects = []
         self.plot_fig.object_ids = []
@@ -253,6 +251,8 @@ class AppWindow(tr.HasTraits):
         self.plot_pane.children = [pb.plot_widget]
 
     def setup_plot(self, model):
+        # TODO: This is being called each time when a model tap in the tree is clicked (node clicked),
+        #  is that the desired behaviour?
         pb = self.plot_backend_table[self.current_plot_backend]
         pb.clear_fig()
         pb.setup_plot(model)

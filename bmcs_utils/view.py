@@ -57,7 +57,7 @@ class View(tr.HasTraits):
         return editors
 
     def get_editor_widgets(self, model, controller):
-        '''Render the wiedgets and attach them with change observers
+        '''Render the widgets and attach them with change observers
         '''
         editors = self.get_editors(model, controller)
         ipw_editors = {}

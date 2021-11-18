@@ -166,6 +166,16 @@ FloatRangeEditor = FloatSliderEditor
 class ButtonEditor(EditorFactory):
     icon = tr.Str('check')
 
+    _widget = None
+
+    widget = tr.Property()
+
+    def _get_widget(self):
+        if self._widget:
+            return self._widget
+        else:
+            raise(AssertionError('Widget was called before it was created and rendered!'))
+
     def render(self):
         button = ipw.Button(
             description=self.label,
@@ -179,6 +189,8 @@ class ButtonEditor(EditorFactory):
             setattr(self.model, self.name, True)
 
         button.on_click(button_clicked)
+
+        self._widget = button
         return button
 
 

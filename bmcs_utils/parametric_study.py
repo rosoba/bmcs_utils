@@ -1,14 +1,16 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from .model import Model
+import os
 
 class ParametricStudy(Model):
     name = 'Parametric Study'
     tree = []
+    plot_title = ''
 
-    def run(self, params_config, exp_data=None, log=True):
+    def run(self, params_config, exp_data=None, log=True, savefig=False):
         np.set_printoptions(precision=3)
-        axes = self._get_axes(params_config)
+        fig, axes = self._get_axes(params_config)
         if exp_data is not None:
             for i, ax in enumerate(axes):
                 w_val = exp_data[0]
@@ -38,6 +40,10 @@ class ParametricStudy(Model):
         if log:
             print('Parametric study finished.')
         plt.show()
+        self.fig = fig
+        if savefig:
+            self.savefig()
+        return fig
 
     def _get_axes(self, params_config):
         params_num = len(params_config)
@@ -52,7 +58,7 @@ class ParametricStudy(Model):
             axes = axes.flatten()
         else:  # axes is a single AxesSubplot object
             axes = np.array([axes])
-        return axes
+        return fig, axes
 
     def _plot_for_param_values(self, param_config, axes, log):
         if self._are_multiple_params(param_config):
@@ -64,6 +70,7 @@ class ParametricStudy(Model):
     def _plot_for_param_conf_list(self, param_configs, axes, log):
         param_values_1 = param_configs[0][2]
         parallel_param_names = [param_config[0] for param_config in param_configs]
+        self.plot_title = '_'.join(parallel_param_names)
 
         for i_value in range(len(param_values_1)):
             values_str = ''
@@ -93,6 +100,9 @@ class ParametricStudy(Model):
                 param_object = param_config[1]
                 setattr(param_object, param_name, default_values[i])
 
+    def savefig(self):
+        self.fig.savefig(os.path.join(self.get_output_dir(), self.plot_title + '.pdf'))
+
     def plot(self, ax, title, curve_label):
         raise NotImplementedError()
 
@@ -106,6 +116,13 @@ class ParametricStudy(Model):
             label += param_name + '=' + str(value) + ', '
             title += param_name + ', '
         return title[0:-2], label[0:-2]
+
+    def get_output_dir(self):
+        cwd = os.getcwd()
+        out_dir = os.path.join(cwd, '_param_studies_data')
+        if not os.path.exists(out_dir):
+            os.makedirs(out_dir)
+        return out_dir
 
 # Usage example
 if __name__ == '__main__':
