@@ -151,5 +151,8 @@ if __name__ == '__main__':
         ['L', dp.beam_design, [4000, 5000]],
         ['L', dp.beam_design, [4000, 5000]],
         ['E_ct', dp.mc, [30000, 35000]],
+        # One can study the effect of changing two parameters together like follows
+        [['B', dp.mc.cross_section_shape_, [1000, 200, 300]],
+         ['H', dp.mc.cross_section_shape_, [300, 400, 700]]],
     ]
     ps.run(params_config)

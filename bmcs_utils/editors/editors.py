@@ -2,6 +2,7 @@ import traits.api as tr
 import ipywidgets as ipw
 import numpy as np
 from .editor_factory import EditorFactory
+import sys
 
 # This style insures that the widget label doesn't take additional white space
 style = {'description_width': 'initial'}
@@ -9,20 +10,71 @@ style = {'description_width': 'initial'}
 
 class FloatEditor(EditorFactory):
     step = tr.Float(None)
+    min = None
+    max = None
+    min_name = tr.Str
+    max_name = tr.Str
     def render(self):
-        return ipw.FloatText(description=self.label,
-                             value=self.value, step=self.step,
-                             tooltip=self.tooltip,
-                             disabled=self.disabled)
+        min = self.min
+        max = self.max
+        if min is not None or max is not None:
+            if min is None:
+                min = -sys.float_info.max
+            if max is None:
+                max = sys.float_info.max
+            if self.min_name:
+                min = getattr(self.model, str(self.min_name))
+            if self.max_name:
+                max = getattr(self.model, str(self.max_name))
+            return ipw.BoundedFloatText(
+                description=self.label,
+                value=self.value,
+                step=self.step,
+                tooltip=self.tooltip,
+                disabled=self.disabled,
+                min=min,
+                max=max,
+            )
+        else:
+            return ipw.FloatText(description=self.label,
+                                 value=self.value,
+                                 step=self.step,
+                                 tooltip=self.tooltip,
+                                 disabled=self.disabled)
 
 
 class IntEditor(EditorFactory):
     step = tr.Int(1)
+    min = None
+    max = None
+    min_name = tr.Str
+    max_name = tr.Str
     def render(self):
-        return ipw.IntText(description=self.label,
-                           value=self.value, step=self.step,
-                           tooltip=self.tooltip,
-                           disabled=self.disabled)
+        min = self.min
+        max = self.max
+        if min is not None or max is not None:
+            if min is None:
+                min = -sys.float_info.max
+            if max is None:
+                max = sys.float_info.max
+            if self.min_name:
+                min = getattr(self.model, str(self.min_name))
+            if self.max_name:
+                max = getattr(self.model, str(self.max_name))
+            return ipw.BoundedIntText(
+                description=self.label,
+                value=self.value,
+                step=self.step,
+                tooltip=self.tooltip,
+                disabled=self.disabled,
+                min=min,
+                max=max,
+            )
+        else:
+            return ipw.IntText(description=self.label,
+                               value=self.value, step=self.step,
+                               tooltip=self.tooltip,
+                               disabled=self.disabled)
 
 
 class IntSliderEditor(EditorFactory):
