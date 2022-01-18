@@ -52,7 +52,7 @@ class HistoryEditor(EditorFactory):
     def render(self):
         history_bar_widgets = []
         eta = (getattr(self.model, str(self.var)) - self.t_min) / (self.t_max - self.t_min)
-        history_slider = ipw.FloatSlider(
+        self.history_slider = ipw.FloatSlider(
             value=eta,
             min=0,
             max=1,
@@ -75,21 +75,21 @@ class HistoryEditor(EditorFactory):
             app_window = self.controller.app_window
             app_window.update_plot(self.model)
 
-        history_slider.observe(change_time_var,'value')
+        self.history_slider.observe(change_time_var,'value')
 
-        # if self.min_var != '':
-        #     def change_t_min(event):
-        #         t_min = event.new
-        #         history_slider.min = t_min
-        #     self.model.observe(change_t_min, self.min_var)
-        #
-        # if self.max_var != '':
-        #     def change_t_max(event):
-        #         t_max = event.new
-        #         history_slider.max = t_max
-        #     self.model.observe(change_t_max, self.max_var)
+        if self.min_var != '':
+            def change_t_min(event):
+                t_min = event.new
+                self.history_slider.min = t_min
+            self.model.observe(change_t_min, self.min_var)
 
-        history_bar_widgets.append(history_slider)
+        if self.max_var != '':
+            def change_t_max(event):
+                t_max = event.new
+                self.history_slider.max = t_max
+            self.model.observe(change_t_max, self.max_var)
+
+        history_bar_widgets.append(self.history_slider)
         history_box = ipw.HBox(history_bar_widgets,
                                 layout=ipw.Layout(padding='0px'))
         history_box.layout.align_items = 'center'

@@ -8,10 +8,5 @@ three development phases:
  * Implementation of Python packages
  * Model presentation using examples via Jupyter Notebooks 
 
-The list of questions and answers related to pa
-
-[Documentation](docs/README.md)
-
-The notebook can be executed directly using the binder service. It takes a while for the repository image to build up.
-
-[![Binder](https://mybinder.org/badge.svg)](https://mybinder.org/v2/gh/bmcs-group/bmcs_utils/master?urlpath=%2Fapps%2Fbmcs_utils/test_editor.ipynb) - Start a simple example
+The detailed documentation of the package is provided 
+[here](docs/README.md)

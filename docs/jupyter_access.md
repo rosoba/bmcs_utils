@@ -13,16 +13,15 @@ https://docs.conda.io/en/latest/miniconda.html
 ## Install BMCS packages 
  
 Download the package specification file
-`environment.yml` 
-TODO: I will put it at the root of bmcs-group
+`bmcs_env.yml` 
 
 Run the setup of the environment by issuing
 ```
-conda env create -f environment.yml
+conda env create -f bmcs_env.yml
 ```
 If you wish to update your environment later you can issue
 ```
-conda env update -f environment.yml --prune
+conda env update -f bmcs_env.yml
 ```
 
 ## Activate `bmcs_env` environment 
@@ -50,14 +49,11 @@ import bmcs_utils.api as bu
 To be able to import them, the runtime configuration in Jupyter and Pycharm
 projects have to be configured with this environment.
 
-1) install jupyter
-    ```shell script
-    conda install -c conda-forge jupyter
-    ```
-   Since the `bmcs_env` environment is active, 
-   jupyter kernel is installed in this environment and, thus, 
-   has all `bmcs` packages within its import path. 
-   
+1) register the newly created `bmcs_env` environment as
+   a jupyter kernel y ussuing
+   ```shell script
+   pytom -m ipykernel install --user --name=bmcs_env
+   ```
 2) start the jupyter notebook, by issuing
    ```shell script
    jupyter notebook

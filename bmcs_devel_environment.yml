@@ -1,0 +1,25 @@
+name: bmcs_env
+channels:
+- conda-forge
+dependencies:
+- jupyterlab
+- traits>=6.1.1
+- traitsui==7.1.0
+- matplotlib-base
+- numpy
+- sympy
+- k3d
+- ipywidgets
+- ipympl
+- ipytree
+- ipyregulartable
+- k3d
+- pip
+- pip:
+  - -e ./bmcs_utils
+  - -e ./bmcs_ibvpy
+  - -e ./bmcs_matmod
+  - -e ./bmcs_cross_section
+  - -e ./bmcs_shear_zone
+  - -e ./bmcs_beam
+  - -e ./bmcs_expsim

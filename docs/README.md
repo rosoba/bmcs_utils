@@ -2,7 +2,7 @@
 # BMCS development process
 
 The BMCS tool suite consists of a packages
-that are developed in coordinate way in parallel.
+that are developed in parallel.
 The  `bmcs_utils` is used by any other package.
 
 It provides the following functionality:
@@ -13,7 +13,10 @@ It provides the following functionality:
    
  - Systematic mapping from symbolic expressions
    derived during the model construction using `sympy`
-   to model classes
+   to model classes.
+   
+ - Infrastructure for persistent data management in 
+   the `db_cache` directory.
    
 By using the `bmcs_utils` as the platform for the model
 implementation, the BMCS model components provide 
@@ -52,8 +55,7 @@ named `bmcs-group`.
    
  - [**Jupyter interface (researcher)**](jupyter_access.md) To perform intensive studies of the models, 
    model calibrations based on experimental data and 
-   parametric studies the BMCS packages can be installed  
-   locally. Included Jupyter notebooks provide the starting 
+   parametric studies the BMCS packages can be installed locally. Included Jupyter notebooks provide the starting 
    point for modifications and processing of data.
    
  - [**Python interface (developer)**](python_access.md) Development of Python code supporting the 
