@@ -154,20 +154,20 @@ class AppWindow(tr.HasTraits):
     model_tree = tr.Property()
     @tr.cached_property
     def _get_model_tree(self):
-        tree = self.model.get_sub_node(self.model.name)
+        tree = self.model.get_tree_subnode(self.model.name)
         return self.get_tree_entries(tree)
 
     def get_tree_entries(self, node):
-        name, model, sub_nodes = node
-        bmcs_sub_nodes = [
-            self.get_tree_entries(sub_node) for sub_node in sub_nodes
+        name, model, subnodes = node
+        bmcs_subnodes = [
+            self.get_tree_entries(subnode) for subnode in subnodes
         ]
-        node_ = BMCSNode(name, nodes=tuple(bmcs_sub_nodes),
+        node_ = BMCSNode(name, nodes=tuple(bmcs_subnodes),
                          controller=model.get_controller(self))
         node_.observe(self.select_node, 'selected')
         def update_node(event):
             '''upon tree change - rebuild the subnodes'''
-            new_node = model.get_sub_node(model.name)
+            new_node = model.get_tree_subnode(model.name)
             new_node_ = self.get_tree_entries(new_node)
             node_.nodes = new_node_.nodes
             # are the original nodes deleted? memory leak?
@@ -234,11 +234,10 @@ class AppWindow(tr.HasTraits):
         self.controller = controller
         time_editor = controller.time_editor
         self.time_editor_pane.children = time_editor
+        self.controller.update_time_editor()
+
         model_editor = controller.model_editor
         self.model_editor_pane.children = model_editor.children
-        # with print_output:
-        #     print('select node: controller', controller)
-        #     print('time_editor: time_editor', time_editor)
         backend = controller.model.plot_backend
         self.set_plot_backend(backend)
         self.setup_plot(controller.model)

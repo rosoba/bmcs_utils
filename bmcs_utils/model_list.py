@@ -27,6 +27,6 @@ class ModelList(Model):
     def _get_tree(self):
         return self.item_keys
 
-    def get_submodels(self):
+    def get_tree_submodels(self):
         return self.items
 

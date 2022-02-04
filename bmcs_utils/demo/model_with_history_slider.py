@@ -21,14 +21,13 @@ class ModelWithHistory(Model):
         Item('t', latex=r't', readonly=True),
         Item('t_max', latex=r'\theta'),
         time_editor=HistoryEditor(var='t',
-                                 max_var='t_max',
+                                  max_var='t_max',
         )
     )
 
     exponent = bu.Float(1)
     def update_plot(self, axes):
-        with bu.print_output:
-            print('SELF', self)
+        print('SELF', self)
         x_range = np.linspace(0,self.t_max,100)
         y_range = x_range**self.exponent
         axes.plot(x_range, y_range)
@@ -47,5 +46,4 @@ class TwoModelsWithHistory(Model):
     tree = ['mwh1', 'mwh2']
 
     def update_plot(self, axes):
-        with bu.print_output:
-            print('mhwh1')
+        print('mhwh1')

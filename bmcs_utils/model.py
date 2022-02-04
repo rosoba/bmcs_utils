@@ -14,6 +14,8 @@ class Model(tr.HasTraits):
 
     tree = []
 
+    depends_on = []
+
     ipw_view = View()
 
     def __init__(self,*args,**kw):
@@ -50,28 +52,30 @@ class Model(tr.HasTraits):
     def get_tree_items(self):
         return self.tree
 
-    def get_submodels(self):
-        sub_models = []
+    def get_tree_submodels(self):
+        submodels = []
         for key in self.get_tree_items():
             trait = self.trait(key)
             if trait == None:
                 raise ValueError('trait %s not found in %s' % (key, self))
             if trait.is_mapped:
-                sub_models.append(getattr(self, key + '_'))
+                submodels.append(getattr(self, key + '_'))
             else:
-                sub_models.append(getattr(self, key))
-        return sub_models
+                submodels.append(getattr(self, key))
+        return submodels
 
-    def get_sub_node(self, name):
+    def get_tree_subnode(self, name):
         # Construct a tree structure of instances tagged by `tree`
-        sub_models = self.get_submodels()
-        sub_nodes = [
-            sub_model.get_sub_node(node_name)
-            for node_name, sub_model in zip(self.tree, sub_models)
+        submodels = self.get_tree_submodels()
+        tree_subnodes = [
+            submodel.get_tree_subnode(node_name)
+            for node_name, submodel in zip(self.tree, submodels)
         ]
-        return (name, self, sub_nodes)
+        return (name, self, tree_subnodes)
 
-    as_node = get_sub_node
+    as_tree_node = get_tree_subnode
+
+    # Notifications along the dependency tree
 
     def _notify_tree_change(self, event):
         self.tree_changed = True
@@ -92,11 +96,11 @@ class Model(tr.HasTraits):
     """Event used in model implementation to notify the need for update"""
 
     def update_observers(self):
-        name, model, nodes = self.as_node('root')
-        for sub_name, sub_model, sub_nodes in nodes:
+        name, model, nodes = self.as_tree_node('root')
+        for sub_name, submodel, subnodes in nodes:
 #            model.observe(self._notify_tree_change,'state_changed')
 #            model.observe(self._notify_tree_change,sub_name)
-            sub_model.observe(model.notify_state_change,'state_changed')
+            submodel.observe(model.notify_state_change,'state_changed')
 
 
 # backward compatibility

@@ -4,8 +4,8 @@ from .editors import EditorFactory
 import ipywidgets as ipw
 import numpy as np
 import time
+from functools import reduce
 from threading import Thread
-import bmcs_utils.api as bu
 
 class HistoryEditor(EditorFactory):
     """
@@ -49,9 +49,15 @@ class HistoryEditor(EditorFactory):
             step = getattr(self.model, str(self.step))
         return step
 
+    submodel = tr.Property
+    def _get_submodel(self):
+        submodel_path = tuple(str(self.var).split('.')[:-1])
+        return reduce(lambda obj, attr: getattr(obj, attr, None), submodel_path, self.model)
+
     def render(self):
         history_bar_widgets = []
-        eta = (getattr(self.model, str(self.var)) - self.t_min) / (self.t_max - self.t_min)
+        var = str(self.var).split('.')[-1]
+        eta = (getattr(self.submodel, var) - self.t_min) / (self.t_max - self.t_min)
         self.history_slider = ipw.FloatSlider(
             value=eta,
             min=0,
@@ -68,10 +74,9 @@ class HistoryEditor(EditorFactory):
 
         def change_time_var(event):
             eta = event['new']
-            # with bu.print_output:
-            #     print('slider on',self.model)
             t = self.t_min + (self.t_max - self.t_min) * eta
-            setattr(self.model, self.var, t)
+            var = str(self.var).split('.')[-1]
+            setattr(self.submodel, var, t)
             app_window = self.controller.app_window
             app_window.update_plot(self.model)
 
@@ -95,3 +100,7 @@ class HistoryEditor(EditorFactory):
         history_box.layout.align_items = 'center'
         return history_box
 
+    def update_from_model(self):
+        var = str(self.var).split('.')[-1]
+        eta = (getattr(self.submodel, var) - self.t_min) / (self.t_max - self.t_min)
+        self.history_slider.value = eta

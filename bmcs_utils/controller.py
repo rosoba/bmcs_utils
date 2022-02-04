@@ -89,5 +89,7 @@ class Controller(tr.HasTraits):
     def subplots(self, fig):
         return self.model.subplots(fig)
 
-    def update_plot(self, axes):
-        self.model.update_plot(axes)
+    def update_time_editor(self):
+        ipw_view = self.model.ipw_view
+        ipw_view.update_time_editor_widget()
+#        self.model.update_plot(axes)

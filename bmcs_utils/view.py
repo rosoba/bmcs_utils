@@ -76,3 +76,7 @@ class View(tr.HasTraits):
         self.time_editor.trait_set(model=model, controller=controller)
         return [self.time_editor.render()]
 
+    def update_time_editor_widget(self):
+        if self.time_editor == None:
+            return
+        self.time_editor.update_from_model()

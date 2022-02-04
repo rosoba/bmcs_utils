@@ -159,3 +159,5 @@ class ProgressEditor(EditorFactory):
         self._run_thread.join()
         self._watch_thread.join()
 
+    def update_from_model(self):
+        print('Warning: Update progress bar from model - not implemented yet')
