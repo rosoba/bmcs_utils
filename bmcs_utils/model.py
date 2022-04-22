@@ -14,6 +14,8 @@ class Model(tr.HasTraits):
 
     tree = []
 
+    subnodes = []
+
     depends_on = []
 
     ipw_view = View()
