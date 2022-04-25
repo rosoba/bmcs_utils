@@ -44,7 +44,7 @@ class Model(tr.HasTraits):
         pass
 
     def interact(self,**kw):
-        return AppWindow(self,**kw).interact()
+        return AppWindow(self, **kw).interact()
 
     def app(self,**kw):
         return AppWindow(self,**kw).interact()

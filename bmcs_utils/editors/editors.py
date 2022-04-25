@@ -12,12 +12,12 @@ class FloatEditor(EditorFactory):
     step = tr.Float(None)
     min = None
     max = None
-    min_name = tr.Str
-    max_name = tr.Str
+    min_name = None
+    max_name = None
     def render(self):
         min = self.min
         max = self.max
-        if min is not None or max is not None:
+        if min is not None or max is not None or self.min_name is not None or self.max_name is not None:
             if min is None:
                 min = -sys.float_info.max
             if max is None:
@@ -47,12 +47,12 @@ class IntEditor(EditorFactory):
     step = tr.Int(1)
     min = None
     max = None
-    min_name = tr.Str
-    max_name = tr.Str
+    min_name = None
+    max_name = None
     def render(self):
         min = self.min
         max = self.max
-        if min is not None or max is not None:
+        if min is not None or max is not None or self.min_name is not None or self.max_name is not None:
             if min is None:
                 min = -sys.float_info.max
             if max is None:
