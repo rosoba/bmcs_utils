@@ -151,7 +151,7 @@ class AppWindow(tr.HasTraits):
         self.model_tree.selected = True
         display(app_print)
 
-    model_tree = tr.Property()
+    model_tree = tr.Property(depends_on='model.graph_changed')
     @tr.cached_property
     def _get_model_tree(self):
         tree = self.model.get_tree_subnode(self.model.name)
@@ -172,7 +172,8 @@ class AppWindow(tr.HasTraits):
             node_.nodes = new_node_.nodes
             # are the original nodes deleted? memory leak?
             # are the original observers deleted?
-        model.observe(update_node, 'tree_changed')
+            # this has been
+        model.observe(update_node, 'graph_changed')
         return node_
 
     tree_pane = tr.Property # might depend on the model
