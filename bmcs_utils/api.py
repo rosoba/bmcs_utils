@@ -15,3 +15,4 @@ from bmcs_utils.editors import \
     HistoryEditor, TextAreaEditor, IntRangeEditor
 from bmcs_utils.parametric_study import ParametricStudy
 from bmcs_utils.data_cache import data_cache
+from bmcs_utils.k3d_utils.extrusion_for_3d_curve import Extruder
