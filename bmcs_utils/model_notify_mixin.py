@@ -1,6 +1,8 @@
 
 import traits.api as tr
 
+state_change_counter = 0
+
 class ModelNotifyMixin(tr.HasTraits):
     """Mixin for notifications
     """
@@ -9,7 +11,10 @@ class ModelNotifyMixin(tr.HasTraits):
 
     depends_on = tr.List(tr.Str, [])
 
-    children = tr.List(tr.Str, [])
+    children = tr.Property(tr.List(tr.Str, []), depends_on='depends_on')
+    @tr.cached_property
+    def _get_children(self):
+        return self.depends_on
 
     parents = tr.Set(tr.WeakRef, {})
 
@@ -17,7 +22,24 @@ class ModelNotifyMixin(tr.HasTraits):
         super().__init__(*args, **kw)
         self.register_in_children()
 
-    state_change_debug = tr.Bool(False)
+    def register_in_children(self):
+        for key, child_trait in self.children_traits.items():
+            child_trait.parents.add(self)
+            self.observe(lambda event: self.change_parent(event), key)
+
+    _state_change_debug = tr.Bool(False)
+
+    state_change_debug = tr.Property(tr.Bool)
+
+    def _get_state_change_debug(self):
+        if self._state_change_debug == True:
+            return True
+        for parent in self.parents:
+            if parent.state_change_debug == True:
+                return True
+
+    def _set_state_change_debug(self, value=True):
+        self._state_change_debug = value
 
     @tr.observe('+TIME,+MESH,+MAT,+CS,+BC,+ALG,+FE,+DSC,+GEO,+ITR')
     def notify_value_change(self, event):
@@ -38,6 +60,20 @@ class ModelNotifyMixin(tr.HasTraits):
     graph_changed = tr.Event
     state_changed = tr.Event
 
+    @tr.observe('state_changed')
+    def record_state_change(self, event):
+        global state_change_counter
+        state_change_counter += 1
+
+    def reset_state_change(self):
+        global state_change_counter
+        state_change_counter = 0
+
+    state_change_counter = tr.Property
+    def _get_state_change_counter(self):
+        global state_change_counter
+        return state_change_counter
+
     """Event used in model implementation to notify the need for update"""
 
     children_traits = tr.Property()
@@ -53,11 +89,6 @@ class ModelNotifyMixin(tr.HasTraits):
             else:
                 children_traits[key] = getattr(self, key)
         return children_traits
-
-    def register_in_children(self):
-        for key, child_trait in self.children_traits.items():
-            child_trait.parents.add(self)
-            self.observe(lambda event: self.change_parent(event), key)
 
     def change_parent(self, event=None):
         if self.state_change_debug:

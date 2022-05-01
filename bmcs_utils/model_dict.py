@@ -12,7 +12,7 @@ class ModelDict(Model):
         old_value = self.items.get(key, None)
         if old_value:
             old_value.parents.remove(self)
-        value.name = key
+        value.name = str(key)
         self.items[key] = value
         value.parents.add(self)
         self.notify_graph_change('Notification from child %s' % 'item')
