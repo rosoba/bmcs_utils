@@ -12,12 +12,11 @@
 #
 # Created on Aug 7, 2009 by: rchx
 
+from .trait_types import TraitBase
 from traits.api import TraitType, TraitError
 from bmcs_utils.editors import EitherTypeEditor
 
-import traits.api as tr
-
-class EitherType(TraitType):
+class EitherType(TraitBase, TraitType):
     """Polymorphic instance - can accommodate the values
     of specified classes. Instances of the classes are created upon key assignment
     Unused instances are kept in cache."""
@@ -71,3 +70,8 @@ class EitherType(TraitType):
         key, _ = self.options[0]
         return (0, key)
 
+    # def get(self, object, name):
+    #     return getattr(object, name + '_')
+    #
+    # def set(self, object, name, value):
+    #     return setattr(object, name + '_', value)

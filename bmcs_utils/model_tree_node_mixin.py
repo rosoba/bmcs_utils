@@ -17,14 +17,13 @@ class ModelTreeNodeMixin(tr.HasTraits):
     @tr.cached_property
     def _get_tree_submodels(self):
         submodels = []
-        for key in self.get_tree_items():
-            trait = self.trait(key)
-            if trait == None:
-                raise ValueError('trait %s not found in %s' % (key, self))
-            if trait.is_mapped:
-                submodels.append(getattr(self, key + '_'))
-            else:
-                submodels.append(getattr(self, key))
+        for name in self.get_tree_items():
+            trait = self.trait(name)
+            name_ = trait.trait_type.get_name_(name)
+            trait_ = getattr(self, name_, None)
+            if trait_ == None:
+                raise ValueError('trait %s not found in %s' % (name_, self))
+            submodels.append(trait_)
         return submodels
 
     def get_tree_subnode(self, name):

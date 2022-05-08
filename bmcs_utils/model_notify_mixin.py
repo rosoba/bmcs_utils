@@ -11,21 +11,26 @@ class ModelNotifyMixin(tr.HasTraits):
 
     depends_on = tr.List(tr.Str, [])
 
+    def traits_init(self):
+        for name in self.children:
+            trait = self.trait(name)
+            if trait is None:
+                raise ValueError('no trait named %s' % name)
+            trait_type = trait.trait_type
+            name_ = trait_type.get_name_(name)
+            trait_ = getattr(self, name_, None)
+            if trait_ is None:
+                value = getattr(self, name)
+                trait_type.post_setattr(self, name, value)
+            trait_ = getattr(self, name_, None)
+            trait_.parents.add(self)
+
     children = tr.Property(tr.List(tr.Str, []), depends_on='depends_on')
     @tr.cached_property
     def _get_children(self):
         return self.depends_on
 
     parents = tr.Set(tr.WeakRef, {})
-
-    def __init__(self, *args, **kw):
-        super().__init__(*args, **kw)
-        self.register_in_children()
-
-    def register_in_children(self):
-        for key, child_trait in self.children_traits.items():
-            child_trait.parents.add(self)
-            self.observe(lambda event: self.change_parent(event), key)
 
     _state_change_debug = tr.Bool(False)
 
@@ -73,29 +78,6 @@ class ModelNotifyMixin(tr.HasTraits):
     def _get_state_change_counter(self):
         global state_change_counter
         return state_change_counter
-
-    """Event used in model implementation to notify the need for update"""
-
-    children_traits = tr.Property()
-    @tr.cached_property
-    def _get_children_traits(self):
-        children_traits = {}
-        for key in self.children:
-            trait = self.trait(key)
-            if trait is None:
-                raise ValueError('trait %s not found in %s' % (key, self))
-            if trait.is_mapped:
-                children_traits[key] = getattr(self, key + '_')
-            else:
-                children_traits[key] = getattr(self, key)
-        return children_traits
-
-    def change_parent(self, event=None):
-        if self.state_change_debug:
-            print('parent %s changing child from child %s to %s' % (self, event.old, event.new))
-        event.old.parents.remove(self)
-        event.new.parents.add(self)
-        self.notify_graph_change('Notification from child %s' % event.new)
 
     def notify_parents_graph_changed(self):
         for parent in self.parents:

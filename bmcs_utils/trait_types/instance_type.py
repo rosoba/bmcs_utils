@@ -8,3 +8,26 @@ class Instance(TraitBase, tr.Instance):
 
     def get_sub_nodes(self):
         return []
+
+    def set(self, obj, name, value):
+        self.pre_setattr(obj, name)
+        self.set_value(obj, name, value)
+        self.post_setattr(obj, name, value)
+
+    def pre_setattr(self, object, name):
+        if name in object.children:
+            old_value = getattr(object, name + '_', None)
+            if old_value:
+                old_value.parents.remove(object)
+
+    def post_setattr(self, object, name, value):
+        if name in object.children:
+            value.parents.add(object)
+            object.notify_graph_change('Notification from child %s' % value)
+
+    def get(self, obj, name):
+        val = self.get_value(obj, name)
+        if val is None:
+            val = self.default_value
+        return val
+
