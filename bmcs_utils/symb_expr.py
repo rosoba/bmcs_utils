@@ -42,7 +42,8 @@ class SymbExpr(tr.HasStrictTraits):
             getattr(self.model,param_name) for param_name in self.symb_model_params
         ])
 
-    def traits_init(self):
+    def __init__(self, *args, **kw):
+        super().__init__(*args, **kw)
         # gather the symbols and construct an ordered tuple
         default_symbols = tuple([getattr(self, sym_name) for sym_name in self.symb_variables])
         for expression in self.symb_expressions:
@@ -86,6 +87,10 @@ class InjectSymbExpr(tr.HasStrictTraits):
 
     symb = tr.Instance(SymbExpr)
 
-    def traits_init(self):
+    def __init__(self, *args, **kw):
+        super().__init__(*args, **kw)
         self.symb = self.symb_class(model = self)
 
+    # def traits_init(self):
+    #     self.symb = self.symb_class(model = self)
+    #
