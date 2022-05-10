@@ -13,7 +13,7 @@ class EitherTypeEditor(EditorFactory):
         option_keys = [key for key, _ in option_tuples]
         key = getattr(self.model, self.name)
         self.drop_down = ipw.Dropdown(description=self.label, value=key,
-                                 tooltip=self.tooltip, options=option_keys)
+                                      tooltip=self.tooltip, options=option_keys)
         self.drop_down.observe(self._selection_changed_from_dropdown,'value')
         self.model.observe(self._selection_changed_from_model,self.name)
         self.instance_pane = ipw.VBox(self._render_instance())

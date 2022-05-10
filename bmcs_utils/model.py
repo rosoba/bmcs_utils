@@ -48,11 +48,15 @@ class Model(ModelNotifyMixin, ModelTreeNodeMixin):
     def update_plot(self, axes):
         pass
 
+    def new_app_window(self, **kw):
+        return AppWindow(self, **kw)
+
     def interact(self,**kw):
-        return AppWindow(self,**kw).interact()
+        app_window = self.new_app_window()
+        return app_window.interact()
 
     def app(self,**kw):
-        return AppWindow(self,**kw).interact()
+        return self.interact(**kw)
 
 # backward compatibility
 InteractiveModel = Model

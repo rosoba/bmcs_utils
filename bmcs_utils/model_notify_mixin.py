@@ -20,10 +20,12 @@ class ModelNotifyMixin(tr.HasTraits):
             name_ = trait_type.get_name_(name)
             trait_ = getattr(self, name_, None)
             if trait_ is None:
-                value = getattr(self, name)
-                trait_type.post_setattr(self, name, value)
+                value = getattr(self, name, None)
+                if value:
+                    trait_type.post_setattr(self, name, value)
             trait_ = getattr(self, name_, None)
-            trait_.parents.add(self)
+            if trait_:
+                trait_.parents.add(self)
 
     children = tr.Property(tr.List(tr.Str, []), depends_on='depends_on')
     @tr.cached_property

@@ -1,4 +1,4 @@
-#-------------------------------------------------------------------------
+# -------------------------------------------------------------------------
 #
 # Copyright (c) 2009, IMB, RWTH Aachen.
 # All rights reserved.
@@ -16,6 +16,7 @@ from .trait_types import TraitBase
 from traits.api import TraitType, TraitError
 from bmcs_utils.editors import EitherTypeEditor
 
+
 class EitherType2(TraitBase, TraitType):
     """Property trait."""
 
@@ -23,7 +24,7 @@ class EitherType2(TraitBase, TraitType):
 
     info_text = 'Property trait test'
 
-    def __init__(self, options = [], on_option_change=None, **metadata):
+    def __init__(self, options=[], on_option_change=None, **metadata):
         # validate that these are trait types
         self.options_dict = {key: value for key, value in options}
         self.on_option_change = on_option_change
@@ -31,14 +32,14 @@ class EitherType2(TraitBase, TraitType):
         super().__init__(**metadata)
         self.map = {}
 
-    def validate ( self, object, name, value ):
+    def validate(self, object, name, value):
         if value in self.options_dict:
             return value
-        self.error( object, name, value )
+        self.error(object, name, value)
 
     def set(self, obj, name, value):
         self.pre_setattr(obj, name)
-        #setattr(self, name, value)
+        # setattr(self, name, value)
         self.set_value(obj, name, value)
         self.post_setattr(obj, name, value)
 

@@ -1,6 +1,7 @@
 
 import traits.api as tr
 from .controller import Controller
+from .tree_node import BMCSNode
 
 class ModelTreeNodeMixin(tr.HasTraits):
     """Base class for interactive bmcs_utils
