@@ -14,9 +14,16 @@ class ModelNotifyMixin(tr.HasTraits):
     def traits_init(self):
         for name in self.children:
             trait = self.trait(name)
+            print('trait', trait)
             if trait is None:
-                raise ValueError('no trait named %s' % name)
+                return
+                #raise ValueError('no trait named %s' % name)
             trait_type = trait.trait_type
+            if trait_type is None:
+                raise TypeError('trait type not specified for %s, %s' % self, name)
+            print(self, name, trait_type)
+            trait_type.link(self, name, trait)
+            return
             name_ = trait_type.get_name_(name)
             trait_ = getattr(self, name_, None)
             if trait_ is None:
