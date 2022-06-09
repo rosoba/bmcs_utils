@@ -16,6 +16,15 @@ class Extruder:
         # path_points should be numpy array with the shape (n, 2), or (n, 3)
         # start_contour_points should be numpy array with the shape (n, 2), or (n, 3)
 
+        path_points, start_contour_points = self.adapt_dimensions(path_points, start_contour_points)
+
+        self.start_contour_points = start_contour_points
+        self.path_points = path_points
+
+        self.generate_3d_contours()
+
+    @staticmethod
+    def adapt_dimensions(path_points, start_contour_points):
         # If path is 2D, convert it to 3D path ([[x1, y1, 0], [x2, y2, 0].. ])
         if path_points.shape[1] == 2:
             path_points = np.insert(path_points, 2, 0, axis=1)
@@ -27,10 +36,7 @@ class Extruder:
         # switch columns 0 and 1
         start_contour_points[:, [0, 1]] = start_contour_points[:, [1, 0]]
 
-        self.start_contour_points = start_contour_points
-        self.path_points = path_points
-
-        self.generate_3d_contours()
+        return path_points, start_contour_points
 
     @staticmethod
     def get_circle_points(r=10, n=100):
@@ -43,7 +49,7 @@ class Extruder:
         path_points = np.copy(self.path_points)
         start_contour_points = np.copy(self.start_contour_points)
 
-        self._transform_first_contour(path_points, start_contour_points)
+        self.transform_first_contour(path_points, start_contour_points)
 
         contours = [start_contour_points]
         for i in range(int(len(path_points)) - 1):
@@ -61,7 +67,14 @@ class Extruder:
         self.contours_3d = np.array(contours)
         return self.contours_3d
 
-    def _transform_first_contour(self, path, contour_points):
+    @staticmethod
+    def transform_first_contour(path, contour_points, adapt_dimensions=False):
+
+        path = path.astype(np.float32)
+
+        if adapt_dimensions:
+            path, contour_points = Extruder.adapt_dimensions(path, contour_points)
+
         path_count = len(path)
         points_count = len(contour_points)
         matrix = Matrix4()
@@ -74,6 +87,8 @@ class Extruder:
             # NOTE: the contour vertices are transformed here
             for i in range(points_count):
                 contour_points[i] = matrix.multiply_with_vector(contour_points[i])
+
+            return contour_points
 
     def _project_contour(self, Q1_contour, path_3p):
         # find direction vectors; v1 and v2
