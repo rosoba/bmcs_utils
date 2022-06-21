@@ -21,11 +21,8 @@ class ModelTreeNodeMixin(tr.HasTraits):
         for name in self.get_tree_items():
             trait = self.trait(name)
             trait_type = trait.trait_type
-            print('xtrait', name)
             name_ = trait_type.get_name_(name)
-            print('name', name_)
             trait_ = getattr(self, name_, None)
-            print('name', trait_)
             if trait_ is None:
                 raise ValueError('trait %s not found in %s' % (name_, self))
             submodels.append(trait_)

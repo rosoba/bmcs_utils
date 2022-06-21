@@ -49,6 +49,19 @@ class EitherType2(TraitBase, TraitType):
             if old_value:
                 old_value.parents.remove(object)
 
+    def post_init(self, object, name, value):
+        # check if the last instance of the klass has been
+        # registered earlier in the trait history
+        klass = self.options_dict.get(value, None)
+        new_value = klass()
+        # set the shadow attribute
+        # editor uses it to associate the value with the option.
+        setattr(object, name + "_", new_value)
+        new_value.parents.add(object)
+        object.notify_graph_change('Notification from child %s' % new_value)
+        if self.on_option_change:
+            getattr(object, self.on_option_change)()
+
     def post_setattr(self, object, name, value):
         # check if the last instance of the klass has been
         # registered earlier in the trait history

@@ -14,25 +14,29 @@ class ModelNotifyMixin(tr.HasTraits):
     def traits_init(self):
         for name in self.children:
             trait = self.trait(name)
-            print('trait', trait)
             if trait is None:
                 return
                 #raise ValueError('no trait named %s' % name)
             trait_type = trait.trait_type
             if trait_type is None:
                 raise TypeError('trait type not specified for %s, %s' % self, name)
-            print(self, name, trait_type)
-            trait_type.link(self, name, trait)
-            return
-            name_ = trait_type.get_name_(name)
-            trait_ = getattr(self, name_, None)
-            if trait_ is None:
-                value = getattr(self, name, None)
-                if value:
-                    trait_type.post_setattr(self, name, value)
-            trait_ = getattr(self, name_, None)
-            if trait_:
-                trait_.parents.add(self)
+            # value = self.trait_get(name)
+            value = getattr(self, name, None)
+            # print('name', name, self.__class__, trait_type)
+            post_setattr = getattr(trait_type, 'post_setattr', None)
+            if post_setattr:
+                post_setattr(self, name, value)
+#                trait_type.post_setattr(self, name, value)
+        return
+            # name_ = trait_type.get_name_(name)
+            # trait_ = getattr(self, name_, None)
+            # if trait_ is None:
+            #     value = getattr(self, name, None)
+            #     if value:
+            #         trait_type.post_setattr(self, name, value)
+            # trait_ = getattr(self, name_, None)
+            # if trait_:
+            #     trait_.parents.add(self)
 
     children = tr.Property(tr.List(tr.Str, []), depends_on='depends_on')
     @tr.cached_property

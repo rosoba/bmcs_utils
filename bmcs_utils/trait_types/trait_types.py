@@ -9,7 +9,7 @@ class TraitBase:
     def get_name_(self, name):
         return name
 
-    def link(self, name, trait):
+    def post_init(self, object, name, value):
         return
 
     def get_sub_nodes(self):

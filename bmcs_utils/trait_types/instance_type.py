@@ -20,6 +20,10 @@ class Instance(TraitBase, tr.Instance):
             if old_value:
                 old_value.parents.remove(object)
 
+    def init_setattr(self, object, name, value):
+        value.parents.add(object)
+        object.notify_graph_change('Notification from child %s' % value)
+
     def post_setattr(self, object, name, value):
         if name in object.children:
             value.parents.add(object)
