@@ -1,4 +1,3 @@
-
 from bmcs_utils.app_window import AppWindow, InteractiveWindow, print_output
 from bmcs_utils.model import Model, InteractiveModel
 from bmcs_utils.model_list import ModelList
@@ -16,3 +15,4 @@ from bmcs_utils.editors import \
 from bmcs_utils.parametric_study import ParametricStudy
 from bmcs_utils.data_cache import data_cache
 from bmcs_utils.k3d_utils.extrusion_for_3d_curve import Extruder
+from bmcs_utils.k3d_utils.k3d_utils import K3DUtils
