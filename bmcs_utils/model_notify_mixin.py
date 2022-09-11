@@ -12,7 +12,7 @@ class ModelNotifyMixin(tr.HasTraits):
     depends_on = tr.List(tr.Str, [])
 
     def traits_init(self):
-        for name in self.children:
+        for name in self.depends_on:
             trait = self.trait(name)
             if trait is None:
                 return
@@ -22,7 +22,7 @@ class ModelNotifyMixin(tr.HasTraits):
                 raise TypeError('trait type not specified for %s, %s' % self, name)
             # value = self.trait_get(name)
             value = getattr(self, name, None)
-            # print('name', name, self.__class__, trait_type)
+            # print('name', name, self.__class__, trait_type, value)
             post_setattr = getattr(trait_type, 'post_setattr', None)
             if post_setattr:
                 post_setattr(self, name, value)
@@ -37,11 +37,6 @@ class ModelNotifyMixin(tr.HasTraits):
             # trait_ = getattr(self, name_, None)
             # if trait_:
             #     trait_.parents.add(self)
-
-    children = tr.Property(tr.List(tr.Str, []), depends_on='depends_on')
-    @tr.cached_property
-    def _get_children(self):
-        return self.depends_on
 
     parents = tr.Set(tr.WeakRef, {})
 

@@ -14,14 +14,6 @@ class Model(ModelNotifyMixin, ModelTreeNodeMixin):
 
     name = tr.Str("<unnamed>")
 
-    children = tr.Property
-    @tr.cached_property
-    def _get_children(self):
-        if self.depends_on:
-            return self.depends_on
-        else:
-            return self.tree
-
     ipw_view = View()
 
     def __init__(self,*args,**kw):

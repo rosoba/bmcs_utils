@@ -12,7 +12,7 @@ from bmcs_utils.symb_expr import \
 from bmcs_utils.trait_types import \
     Int, Float, Bool, Str, \
     Button, Range, Progress, Array, \
-    EitherType, Enum, Instance, List, Dict, Selector
+    EitherType, Enum, Instance, List, Dict, Selector, WeakRef
 from bmcs_utils.editors import \
     IntEditor, BoolEditor, FloatEditor, FloatRangeEditor, ProgressEditor, \
     ButtonEditor, ArrayEditor, InstanceEditor, EitherTypeEditor, ListEditor, \

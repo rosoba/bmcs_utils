@@ -9,10 +9,11 @@ class ModelTreeNodeMixin(tr.HasTraits):
 
     name = tr.Str("<unnamed>")
 
-    tree = []
+    tree = [] # kept only for backward compatibility
+    ipw_tree = []
 
     def get_tree_items(self):
-        return self.tree
+        return self.tree + self.ipw_tree
 
     tree_submodels = tr.Property(depends_on='graph_changed')
     @tr.cached_property
@@ -33,7 +34,7 @@ class ModelTreeNodeMixin(tr.HasTraits):
         submodels = self.tree_submodels
         tree_subnodes = [
             submodel.get_tree_subnode(node_name)
-            for node_name, submodel in zip(self.tree, submodels)
+            for node_name, submodel in zip(self.get_tree_items(), submodels)
         ]
         return (name, self, tree_subnodes)
 

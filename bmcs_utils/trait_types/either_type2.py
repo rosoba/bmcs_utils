@@ -44,7 +44,7 @@ class EitherType2(TraitBase, TraitType):
         self.post_setattr(obj, name, value)
 
     def pre_setattr(self, object, name):
-        if name in object.children:
+        if name in object.depends_on:
             old_value = getattr(object, name + '_', None)
             if old_value:
                 old_value.parents.remove(object)
@@ -70,7 +70,7 @@ class EitherType2(TraitBase, TraitType):
         # set the shadow attribute
         # editor uses it to associate the value with the option.
         setattr(object, name + "_", new_value)
-        if name in object.children:
+        if name in object.depends_on:
             new_value.parents.add(object)
             object.notify_graph_change('Notification from child %s' % new_value)
         if self.on_option_change:

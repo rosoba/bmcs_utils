@@ -34,3 +34,9 @@ class ModelDict(Model):
     @tr.cached_property
     def _get_tree_submodels(self):
         return [self.items[key] for key in self.tree]
+
+    def values(self):
+        return self.items.values()
+
+    def keys(self):
+        return self.items.keys()
