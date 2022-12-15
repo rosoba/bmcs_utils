@@ -50,6 +50,7 @@ class Controller(tr.HasTraits):
         return ipw_menu.get_menu(model=self.model, ui_pane=self)
 
     ipw_editors = tr.Property
+
     @tr.cached_property
     def _get_ipw_editors(self):
         ipw_view = self.model.ipw_view
@@ -58,6 +59,7 @@ class Controller(tr.HasTraits):
         return ipw_editors
 
     model_editor = tr.Property
+
     @tr.cached_property
     def _get_model_editor(self):
         ipw_editors = self.ipw_editors
@@ -65,10 +67,11 @@ class Controller(tr.HasTraits):
         item_names = ipw_view.item_names
         ipw_editors_list = [ipw_editors[name] for name in item_names]
         box_layout = ipw.Layout(display='flex',
-                            flex_flow='column',
-                            align_items='stretch',
-                            width='100%')
-        items_layout = ipw.Layout(width='auto')  # override the default width of the button to 'auto' to let the button grow
+                                flex_flow='column',
+                                align_items='stretch',
+                                width='100%')
+        items_layout = ipw.Layout(
+            width='auto')  # override the default width of the button to 'auto' to let the button grow
         for ipw_editor in ipw_editors_list:
             ipw_editor.layout = items_layout
 
@@ -77,11 +80,11 @@ class Controller(tr.HasTraits):
         return frame
 
     time_editor = tr.Property
+
     @tr.cached_property
     def _get_time_editor(self):
         ipw_view = self.model.ipw_view
-        return ipw_view.get_time_editor_widget(model=self.model,
-                                               controller=self)
+        return ipw_view.get_time_editor_widget(model=self.model, controller=self)
 
     def plot_k3d(self, k3d_plot):
         self.model.plot_k3d(k3d_plot)

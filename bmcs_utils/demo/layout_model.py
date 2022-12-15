@@ -30,5 +30,5 @@ class LayoutModel(Model):
         with print_output:
             print('update plot')
         x = np.linspace(0,1,self.n)
-        axes.plot(x,np.zeros_like(n),marker='o')
+        axes.plot(x,np.zeros_like(x),marker='o')
 

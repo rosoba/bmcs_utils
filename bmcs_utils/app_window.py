@@ -152,14 +152,14 @@ class AppWindow(tr.HasTraits):
         self.model_tree.selected = True
         display(app_print)
 
-    model_tree = tr.Property()
+    model_tree = tr.Property(depends_on='model.graph_changed')
     @tr.cached_property
     def _get_model_tree(self):
         tree = self.model.get_tree_subnode(self.model.name)
         return self.get_tree_entries(tree)
 
-    def get_tree_entries(self, node):
-        name, model, subnodes = node
+    def get_tree_entries(self, tree):
+        name, model, subnodes = tree
         bmcs_subnodes = [
             self.get_tree_entries(subnode) for subnode in subnodes
         ]
@@ -168,12 +168,14 @@ class AppWindow(tr.HasTraits):
         node_.observe(self.select_node, 'selected')
         def update_node(event):
             '''upon tree change - rebuild the subnodes'''
-            new_node = model.get_tree_subnode(model.name)
+            #new_node = model.get_tree_subnode(model.name)
+            new_node = model.get_tree_subnode(name)
             new_node_ = self.get_tree_entries(new_node)
             node_.nodes = new_node_.nodes
             # are the original nodes deleted? memory leak?
             # are the original observers deleted?
-        model.observe(update_node, 'tree_changed')
+            # this has been
+        model.observe(update_node, 'graph_changed')
         return node_
 
     tree_pane = tr.Property # might depend on the model
@@ -236,6 +238,14 @@ class AppWindow(tr.HasTraits):
         time_editor = controller.time_editor
         self.time_editor_pane.children = time_editor
         self.controller.update_time_editor()
+
+        # trait = node.trait
+        # trait_type = trait.trait_type
+        # editor_factory = trait_type.editor_factory
+        # if editor_factory:
+        #     editor = editor_factory()
+        #     print('tt', trait_type)
+        #     print('editor', editor)
 
         model_editor = controller.model_editor
         self.model_editor_pane.children = model_editor.children

@@ -4,17 +4,17 @@ import traits.api as tr
 from .editors import EditorFactory
 import ipywidgets as ipw
 
-class ListEditor(EditorFactory):
+class DictEditor(EditorFactory):
     """Polymorphic instance editor.
     """
-    item_id = tr.Str('name')
 
     _values = tr.Dict
 
     def render(self):
-        list_values = getattr(self.model, self.name)
-        list_keys = [getattr(value, self.item_id) for value in list_values]
-        self._values = {key: value for key, value in zip(list_keys, list_values)}
+        print('render dict')
+        self._values = getattr(self.model, self.name)
+        list_keys = list(items)
+        print('values', self._values)
         if len(list_keys) == 0:
             key = '<empty list>'
             return ipw.VBox()

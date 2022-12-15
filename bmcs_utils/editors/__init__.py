@@ -7,3 +7,4 @@ from .either_type_editor import EitherTypeEditor
 from .enum_type_editor import EnumTypeEditor
 from .instance_editor import InstanceEditor
 from .list_editor import ListEditor
+from .dict_editor import DictEditor

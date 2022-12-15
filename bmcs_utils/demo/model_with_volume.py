@@ -16,7 +16,7 @@ class ModelWithVolume(Model):
 
     plot_backend = 'k3d'
 
-    layout = tr.Instance(LayoutModel,())
+    layout = Instance(LayoutModel,())
 
     tree = ['layout']
 

@@ -13,11 +13,10 @@
 # Created on Aug 7, 2009 by: rchx
 
 from traits.api import TraitType, TraitError
+from .trait_types import TraitBase
 from bmcs_utils.editors import EnumTypeEditor
 
-import traits.api as tr
-
-class Enum(TraitType):
+class Enum(TraitBase, TraitType):
     """Polymorphic instance - can accommodate the values
     of specified classes. Instances of the classes are created upon key assignement
     Unused instances are kept in cache."""

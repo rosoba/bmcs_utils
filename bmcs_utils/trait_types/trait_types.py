@@ -5,6 +5,13 @@ from bmcs_utils.editors import \
     TextEditor
 
 class TraitBase:
+
+    def get_name_(self, name):
+        return name
+
+    def post_init(self, object, name, value):
+        return
+
     def get_sub_nodes(self):
         """Let the trait extract the subnodes from its model
         """
