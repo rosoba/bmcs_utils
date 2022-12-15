@@ -61,8 +61,8 @@ class K3DBackend(PlotBackend):
         self.plot_widget = ipw.Output(layout=ipw.Layout(width="100%", height="100%"))
         self.plot_fig = k3d.Plot()
         self.plot_fig.layout = ipw.Layout(width="100%",height="100%")
-        # with self.plot_widget:
-        #     self.plot_fig.display()
+        with self.plot_widget:
+            self.plot_fig.display()
         self.plot_fig.outputs.append(self.plot_widget)
         self.objects = {}
 
@@ -85,8 +85,9 @@ class K3DBackend(PlotBackend):
         self.objects.pop(object_key)
 
     def show_fig(self):
-        with self.plot_widget:
-            self.plot_fig.display()
+        # calling self.plot_fig.display() here will add new k3d interface each time a parameter changes
+        pass
+
     def setup_plot(self, model):
         model.setup_plot(self)
     def update_plot(self, model):
