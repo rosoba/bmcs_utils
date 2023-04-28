@@ -2,7 +2,7 @@ import numpy as np
 
 def get_fw_curves_avg(fw_curves_list, ax=None):
     """
-    fw_curves_list: [fw_numpy_array, fw_numpy_array, ...] where fw_numpy_array has the size (data_length x 2)
+    fw_curves_list: [fw_numpy_array, fw_numpy_array, ...] where fw_numpy_array has the shape (data_length, 2)
     """
     fw_curves_list = [fw.astype(np.float64) for fw in fw_curves_list]
     w_list = [fw[:, 1] for fw in fw_curves_list]
@@ -18,3 +18,18 @@ def get_fw_curves_avg(fw_curves_list, ax=None):
     if ax is not None:
         ax.plot(w, f, color='gray')
     return f, w
+
+
+def get_asc_upper_env_ids(arr):
+    """
+    Useful to get the upper envelope of load-displacement curve (representing load-controlled variant)
+    arr: one dimentional numpy array (typically with positive elements)
+    returns: for example, given the array [2, 1, 0, -5, 5, 3, 9, 10], the ids of [2, 5, 9, 10] will be returned
+    """
+    max_ = arr[0]
+    upper_env_ids = [0]
+    for i, value in enumerate(arr):
+        if value > max_:
+            max_ = value
+            upper_env_ids.append(i)
+    return np.array(upper_env_ids)
