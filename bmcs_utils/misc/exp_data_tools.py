@@ -33,3 +33,8 @@ def get_asc_upper_env_ids(arr):
             max_ = value
             upper_env_ids.append(i)
     return np.array(upper_env_ids)
+
+
+def get_exp_fw_asc(fw):
+    f_upper_env_ids = get_asc_upper_env_ids(fw[0])
+    return fw[0][f_upper_env_ids].astype(np.float_), fw[1][f_upper_env_ids].astype(np.float_)
