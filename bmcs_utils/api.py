@@ -18,7 +18,7 @@ from bmcs_utils.editors import \
     ButtonEditor, ArrayEditor, InstanceEditor, EitherTypeEditor, ListEditor, \
     HistoryEditor, TextAreaEditor, IntRangeEditor, FloatSliderEditorSelector, FloatSliderEditor
 from bmcs_utils.misc.exp_data_tools import get_fw_curves_avg, get_asc_upper_env_ids, get_exp_fw_asc
-from bmcs_utils.misc.plot_tools import plot_colors, set_latex_mpl_format
+from bmcs_utils.misc.plot_tools import plot_colors, set_latex_mpl_format, get_color
 from bmcs_utils.parametric_study import ParametricStudy
 from bmcs_utils.data_cache import data_cache
 from bmcs_utils.k3d_utils.extrusion_for_3d_curve import Extruder
