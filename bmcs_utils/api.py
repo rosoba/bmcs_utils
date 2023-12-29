@@ -21,6 +21,8 @@ from bmcs_utils.misc.exp_data_tools import get_fw_curves_avg, get_asc_upper_env_
 from bmcs_utils.misc.plot_tools import plot_colors, set_latex_mpl_format, get_color
 from bmcs_utils.parametric_study import ParametricStudy
 from bmcs_utils.data_cache import data_cache
-from bmcs_utils.k3d_utils.extrusion_for_3d_curve import Extruder
-from bmcs_utils.k3d_utils.k3d_utils import K3DUtils
+# These imports must be done in a package that registered k3d for usage,
+# e.g. in bmcs_shell
+# from bmcs_utils.k3d_utils.extrusion_for_3d_curve import Extruder
+# from bmcs_utils.k3d_utils.k3d_utils import K3DUtils
 

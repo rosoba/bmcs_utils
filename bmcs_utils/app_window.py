@@ -10,12 +10,9 @@ Application Window for as a user interface to implemented models within Jupyter
 import ipywidgets as ipw
 import ipytree as ipt
 import traits.api as tr
-import matplotlib.pyplot as plt
-import k3d
 from .tree_node import BMCSNode
-
 from bmcs_utils.i_model import IModel
-
+import bmcs_utils.config as config
 print_output = ipw.Output(layout=ipw.Layout(width="100%"))
 
 class PlotBackend(tr.HasTraits):
@@ -108,7 +105,8 @@ class AppWindow(tr.HasTraits):
 
     plot_backend_table = tr.Dict
     def _plot_backend_table_default(self):
-        return{'mpl': MPLBackend(), 'k3d': K3DBackend()}
+        return {key : config.available_plot_backends[key]() for key
+                in config.active_plot_backends}
 
     # Shared layouts -
     left_pane_layout = tr.Instance(ipw.Layout)

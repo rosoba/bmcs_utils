@@ -2,6 +2,7 @@
 import traits.api as tr
 from .controller import Controller
 from .tree_node import BMCSNode
+from .trait_types import TraitBase
 
 class ModelTreeNodeMixin(tr.HasTraits):
     """Base class for interactive bmcs_utils
@@ -22,6 +23,8 @@ class ModelTreeNodeMixin(tr.HasTraits):
         for name in self.get_tree_items():
             trait = self.trait(name)
             trait_type = trait.trait_type
+            if not isinstance(trait_type, TraitBase):
+                raise Exception('type error of attribute: {} - {} '.format(name, str(trait_type)))
             name_ = trait_type.get_name_(name)
             trait_ = getattr(self, name_, None)
             if trait_ is None:
