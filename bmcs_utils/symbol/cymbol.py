@@ -12,12 +12,17 @@ class Cymbol(sp.Symbol):
     import inspect
     inspect.getsource(lambdified_function)
     '''
-    def __init__(self, name, codename='', **assumptions):
-        super(Cymbol, self).__init__()
-        if codename:
-            self.codename = codename
-        else:
-            self.codename = name
+    def __new__(cls, name, codename=None, **assumptions):
+        obj = super().__new__(cls, name, **assumptions)
+        obj.codename = codename if codename else name
+        return obj
+
+    # def __init__(self, name, codename='', **assumptions):
+    #     super(Cymbol, self).__init__(name, **assumptions)
+    #     if codename:
+    #         self.codename = codename
+    #     else:
+    #         self.codename = name
 
 def _print_Symbol(self, expr):
     CodePrinter = sp.printing.codeprinter.CodePrinter
