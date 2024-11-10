@@ -5,7 +5,7 @@
 # the list of dependencies small. Packages using bmcs_utils
 # can specify the requied backends in the active_plot_backends
 
-active_plot_backends = ['mpl']
+active_plot_backends = ['k3d']
 
 from .plot_backend_mpl import MPLBackend
 from .plot_backend_k3d import K3DBackend

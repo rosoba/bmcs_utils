@@ -22,7 +22,7 @@ class Model(ModelNotifyMixin, ModelTreeNodeMixin):
     def get_controller(self, app_window):
         return Controller(model=self, app_window=app_window)
 
-    plot_backend = 'mpl'
+    plot_backend = 'k3d'
     """"plot_backend = 'mpl' or 'k3d'"""
 
     def subplots(self, fig):
