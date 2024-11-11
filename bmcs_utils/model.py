@@ -31,7 +31,7 @@ class Model(ModelNotifyMixin, ModelTreeNodeMixin):
         elif self.plot_backend == 'k3d':
             return fig
         else:
-            raise NameError(self.plot_backend + ' is not a valid plot_backend!')
+            raise NameError(f'{self.plot_backend} is not a valid plot_backend!')
 
     def plot(self, axes):
         """Alias to update plot - to be overloaded by subclasses"""

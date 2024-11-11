@@ -9,19 +9,18 @@ class ModelDict(Model):
     items = Dict({})
 
     def __setitem__(self, key, value):
-        old_value = self.items.get(key, None)
-        if old_value:
+        if old_value := self.items.get(key, None):
             old_value.parents.remove(self)
         value.name = str(key)
         self.items[key] = value
         value.parents.add(self)
-        self.notify_graph_change('Notification from child %s' % 'item')
+        self.notify_graph_change('Notification from child item')
 
     def __delitem__(self, key):
         value = self.items[key]
         value.parents.remove(self)
         del self.items[key]
-        self.notify_graph_change('Notification from child %s' % 'item')
+        self.notify_graph_change('Notification from child item')
 
     def __getitem__(self, key):
         return self.items[key]

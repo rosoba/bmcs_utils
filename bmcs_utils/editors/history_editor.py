@@ -57,12 +57,14 @@ class HistoryEditor(EditorFactory):
     def render(self):
         history_bar_widgets = []
         var = str(self.var).split('.')[-1]
-        eta = (getattr(self.submodel, var) - self.t_min) / (self.t_max - self.t_min)
+        t_span = self.t_max - self.t_min
+        eta = (getattr(self.submodel, var) - self.t_min) / t_span
+        t_value = eta * t_span + self.t_min
         self.history_slider = ipw.FloatSlider(
             value=eta,
-            min=0,
-            max=1,
-            step=0.01,
+            min=self.t_min,
+            max=self.t_max,
+            step=0.01 * t_span,
             tooltip=self.tooltip,
             continuous_update=False,
             description=self.label,

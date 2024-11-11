@@ -14,15 +14,15 @@ class Cymbol(sp.Symbol):
     '''
     def __new__(cls, name, codename=None, **assumptions):
         obj = super().__new__(cls, name, **assumptions)
-        obj.codename = codename if codename else name
+        obj.codename = codename or name
         return obj
 
-    # def __init__(self, name, codename='', **assumptions):
-    #     super(Cymbol, self).__init__(name, **assumptions)
-    #     if codename:
-    #         self.codename = codename
-    #     else:
-    #         self.codename = name
+    @property
+    def T(self):
+        """Pass through the transpose operator to allow also scalar variables in places 
+        where vectors or matrices are expected"""
+        return self
+
 
 def _print_Symbol(self, expr):
     CodePrinter = sp.printing.codeprinter.CodePrinter
