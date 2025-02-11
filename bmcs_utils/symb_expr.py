@@ -96,7 +96,3 @@ class InjectSymbExpr(tr.HasStrictTraits):
     def __init__(self, *args, **kw):
         super().__init__(*args, **kw)
         self.symb = self.symb_class(model = self)
-
-    # def traits_init(self):
-    #     self.symb = self.symb_class(model = self)
-    #

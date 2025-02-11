@@ -38,19 +38,30 @@ class ModelNotifyMixin(tr.HasTraits):
 
     parents = tr.Set(tr.WeakRef, {})
 
-    _state_change_debug = tr.Bool(False)
+    x_state_change_debug = tr.Bool(False)
 
     state_change_debug = tr.Property(tr.Bool)
 
     def _get_state_change_debug(self):
-        if self._state_change_debug == True:
+        if self.x_state_change_debug == True:
             return True
         for parent in self.parents:
             if parent.state_change_debug == True:
                 return True
 
     def _set_state_change_debug(self, value=True):
-        self._state_change_debug = value
+        self.x_state_change_debug = value
+
+    # def __getstate__(self):
+    #     """Customized getstate for correct serialization."""
+    #     state = super().__getstate__()
+    #     # Include private attributes explicitly
+    #     return state, self.x_state_change_debug
+
+    # def __setstate__(self, state):
+    #     """Customized setstate for correct deserialization."""
+    #     base_state, self.x_state_change_debug = state
+    #     super().__setstate__(base_state)
 
     @tr.observe('+TIME,+MESH,+MAT,+CS,+BC,+ALG,+FE,+DSC,+GEO,+ITR')
     def notify_value_change(self, event):
